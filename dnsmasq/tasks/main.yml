@@ -1,0 +1,58 @@
+
+
+- name: Install Dnsmasq
+  yum:
+    pkg: dnsmasq
+    state: present
+
+    
+- name: Create /etc/dnsmasq folder
+  file: path=/etc/dnsmasq owner=root group=root mode=0755 state=directory
+
+- name: Create /etc/dnsmasq/hosts folder
+  file: path=/etc/dnsmasq/hosts owner=root group=root mode=0755 state=directory
+
+  
+- name: Build main hosts file
+  template:
+    src: hosts00.j2
+    dest: /etc/dnsmasq/hosts/hosts00
+    owner: root
+    group: root
+    mode: 0644
+    backup: no
+  notify: restart dnsmasq
+    
+- name: Build our own resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/dnsmasq/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: no
+  notify: restart dnsmasq
+  
+- name: Set main config file
+  template:
+    src: dnsmasq.conf.j2
+    dest: /etc/dnsmasq.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: no
+  notify: restart dnsmasq
+  
+
+- meta: flush_handlers
+    
+- name: Enable dnsmasq
+  service:
+    name: dnsmasq
+    enabled: yes
+    state: started          
+  
+      
+    
+    
+    

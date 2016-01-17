@@ -9,6 +9,10 @@ NM_CONTROLLED={{ ifcfg.nm_controlled }}
 NM_CONTROLLED=no
 {% endif %}
 
+{% if ifcfg.vlan is defined %}
+VLAN={{ ifcfg.vlan }}
+{% endif %}
+
 DEVICE={{ ifcfg.device }}
 
 {% if ifcfg.bootproto is defined and (ifcfg.bootproto == 'static' or ifcfg.bootproto == 'none') %}
@@ -36,10 +40,14 @@ DOMAIN={{ ifcfg.domain }}
 BOOTPROTO=dhcp
 {% endif %}
 
+{% if ifcfg.enabled is defined and not ifcfg.enabled %} 
+ONBOOT=no
+{% else %}
 {% if ifcfg.onboot is defined %}
 ONBOOT={{ ifcfg.onboot }}
 {% else %}
 ONBOOT=yes
+{% endif %}
 {% endif %}
 
 {% if ifcfg.ipv6 is defined %}

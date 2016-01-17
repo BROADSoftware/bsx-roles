@@ -1,5 +1,5 @@
 # ANSIBLE GENERATED.
-{% if ifcfg is defined and ifcfg.routes is defined %}
+{% if ifcfg is defined and ifcfg.routes is defined and (ifcfg.enabled is undefined or ifcfg.enabled) %}
 {% for i in ifcfg.routes %}
 ADDRESS{{ loop.index - 1  }}={{ i.network }}
 NETMASK{{ loop.index - 1 }}={{ i.netmask }}

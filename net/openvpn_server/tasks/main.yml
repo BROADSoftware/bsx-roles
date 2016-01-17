@@ -1,0 +1,125 @@
+---
+# Copyright (C) 2015 BROADSoftware
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#limitations under the License.
+#
+
+# Some references:
+#http://possiblelossofprecision.net/?p=1758
+#http://lists.freedesktop.org/archives/systemd-devel/2011-November/003934.html
+#https://openvpn.net/index.php/open-source/documentation/miscellaneous/76-ethernet-bridging.html
+
+- fail: msg="'openvpn_server.mode' must be defined and set to 'bridge' or 'routing'"
+  when: openvpn_server.mode is not defined or (openvpn_server.mode != 'routing' and openvpn_server.mode != 'bridge')
+
+
+- yum: pkg=zip,openvpn,easy-rsa state=present
+
+- yum: pkg=bridge-utils state=present
+  when: openvpn_server.mode == 'bridge'
+
+- name: Populate /etc/openvpn
+  shell: cp /usr/share/easy-rsa/2.0/* /etc/openvpn
+  args:
+    creates: /etc/openvpn/build-ca
+    
+- name: Adjust certificate subject
+  template:
+    src: vars.j2
+    dest: /etc/openvpn/vars
+    backup: yes
+
+# ================================================= Server setup
+
+- name: Build server certificate (May take quite long time)
+  script: build_server_keys.sh creates=/etc/openvpn/keys/dh2048.pem
+    
+- name: "{{label|default('')}}Configure server.conf"
+  template:
+    src: server.conf.j2
+    dest: "/etc/openvpn/{{openvpn_server.instance}}.conf"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+   - restart openvpn (c7)
+   - restart openvpn (c6)
+   
+- name: "{{label|default('')}}Define bridge ip/down scripts"
+  template:
+    src: "{{item}}.j2"
+    dest: "/etc/openvpn/{{openvpn_server.instance}}-{{item}}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+  when: openvpn_server.mode == 'bridge'
+  with_items:
+  - bridge-start
+  - bridge-stop
+  notify:
+   - restart openvpn (c7)
+   - restart openvpn (c6)
+   
+   
+
+- meta: flush_handlers
+    
+- name: "{{label|default('')}}Enable openvpn services"
+  service:
+    name: "openvpn@{{openvpn_server.instance}}.service"
+    enabled: yes 
+    state: started 
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+    
+# ================================================= Client bundle build
+    
+- name: Build client key pair
+  script: build_client_keys.sh client creates=/etc/openvpn/keys/client.key
+    
+- name: "{{label|default('')}}Create client bundle dir"
+  file: path=/etc/openvpn/{{ openvpn_server.client_bundle_name }}-bundle state=directory owner=root group=root mode=0755
+
+- name: "{{label|default('')}}Copy client certificate"
+  shell: cp keys/{{item}}  {{ openvpn_server.client_bundle_name }}-bundle/{{ openvpn_server.client_bundle_name }}-{{item}}; 
+  args:
+    chdir: /etc/openvpn
+    creates: /etc/openvpn/{{ openvpn_server.client_bundle_name }}-bundle/{{ openvpn_server.client_bundle_name }}-{{item}}
+  with_items:
+    - client.key
+    - client.crt
+    - ca.crt
+    
+- name: "{{label|default('')}}Configure client conf"
+  template:
+    src: client.ovpn.j2
+    dest: /etc/openvpn/{{ openvpn_server.client_bundle_name }}-bundle/{{ openvpn_server.client_bundle_name }}.ovpn
+    backup: no
+  register: client_conf
+  
+- name: "{{label|default('')}}Force a rebuild if client conf has been changed"
+  file:
+    path: /etc/openvpn/{{ openvpn_server.client_bundle_name }}-bundle.zip
+    state: absent
+  when: client_conf.changed
+
+- name: "{{label|default('')}}build client bundle"
+  shell: zip ../{{openvpn_server.client_bundle_name }}-bundle.zip *
+  args:
+    chdir: /etc/openvpn/{{ openvpn_server.client_bundle_name  }}-bundle
+    creates: /etc/openvpn/{{ openvpn_server.client_bundle_name }}-bundle.zip
+
+      
+    
+    
