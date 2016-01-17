@@ -1,0 +1,75 @@
+---
+# Copyright (C) 2015 BROADSoftware
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#limitations under the License.
+#
+
+# Following are sameple of configuration. To be duplicated in your vars context, uncommented and fullfilled for you needs
+
+#firewalld:
+#  default_zone: external
+#  services: []
+#  zones:
+#  - name: "external"
+#    short: "External"
+#    interfaces:
+#    - enp1s0
+#    services:
+#    - ssh
+#    - openvpn  
+#    - http
+#    masquerade: true
+#  - name: internal
+#    interfaces:
+#    - enp4s4
+#    services:
+#    - ssh
+#    - dns
+#    - dhcp
+#    - tftp
+
+#firewalld:
+#  services:
+#  - name: openvpn2
+#    short: "OpenVpn2"
+#    description: "An alternate OpenVpn Server"
+#    ports:
+#    - port: 1195
+#      protocol: udp
+#    - port: 1196
+#      protocol: udp
+#  zones:
+#  - name: "zone1"
+#    short: "Zone1"
+#    description: "My zone1"
+#    services:
+#    - ssh
+#    - openvpn2  
+#    interfaces:
+#    - eth0
+#    ports:
+#    - port: 25-27
+#      protocol: udp
+#    masquerade: true
+#    forward_ports:
+#    - port: 180
+#      protocol: tcp
+#      to_port: 80
+#      to_addr: 192.168.2.99
+#  - name: zone2
+#    short: Zone2
+#    description: "My zone 2"
+#    services:
+#    - http
+#    - https  
+ 

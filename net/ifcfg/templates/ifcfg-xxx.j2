@@ -1,0 +1,77 @@
+# ANSIBLE GENERATED.
+{% if ifcfg.name is defined %}
+NAME={{ ifcfg.name }}
+{% endif %}
+
+{% if ifcfg.nm_controlled is defined %}
+NM_CONTROLLED={{ ifcfg.nm_controlled }}
+{% else %}
+NM_CONTROLLED=no
+{% endif %}
+
+DEVICE={{ ifcfg.device }}
+
+{% if ifcfg.bootproto is defined and (ifcfg.bootproto == 'static' or ifcfg.bootproto == 'none') %}
+BOOTPROTO=none
+{% if ifcfg.address is defined %}
+IPADDR={{ ifcfg.address }}
+{% endif %}
+{% if ifcfg.netmask is defined %}
+NETMASK={{ ifcfg.netmask }}
+{% endif %}
+{% if ifcfg.gateway is defined %}
+GATEWAY={{ ifcfg.gateway }}
+{% endif %}
+{% if ifcfg.dns is defined %}
+{% for ns in ifcfg.dns  %}
+DNS{{ loop.index }}={{ ns }}
+{% endfor %}
+{% endif %}
+{% if ifcfg.domain is defined %}
+DOMAIN={{ ifcfg.domain }}
+{% endif %}
+{% endif %}
+
+{% if ifcfg.bootproto is defined and ifcfg.bootproto == 'dhcp' %}
+BOOTPROTO=dhcp
+{% endif %}
+
+{% if ifcfg.onboot is defined %}
+ONBOOT={{ ifcfg.onboot }}
+{% else %}
+ONBOOT=yes
+{% endif %}
+
+{% if ifcfg.ipv6 is defined %}
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_PEERDNS="yes"
+IPV6_PEERROUTES="yes"
+IPV6_FAILURE_FATAL="no"
+{% else %}
+IPV6INIT=no
+{% endif %}
+
+{% if ifcfg.type is defined %}
+TYPE={{ ifcfg.type }}
+{% endif %}
+
+{% if ifcfg.bridge is defined %}
+BRIDGE={{ ifcfg.bridge }}
+{% endif %}
+
+{% if ifcfg.peerdns is defined %}
+PEERDNS={{ ifcfg.peerdns }}
+{% else %}
+PEERDNS=no
+{% endif %}
+
+
+{% if ifcfg.peerroutes is defined %}
+PEERROUTES={{ ifcfg.peerroutes }}
+{% else %}
+PEERROUTES=yes
+{% endif %}
+

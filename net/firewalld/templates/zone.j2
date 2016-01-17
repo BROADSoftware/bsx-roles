@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zone {% if item.target is defined %}target="{{item.target}}"{%endif%}>
+  <short>{{item.short | default(item.name)}}</short>
+{% if item.description is defined %}
+  <description>{{item.description}}</description>
+{% endif %}
+{% if item.interfaces is defined %}
+{% for if in item.interfaces %}
+  <interface name="{{if}}"/>
+{%endfor%}
+{%endif%}
+{% if item.sources is defined %}
+{% for if in item.sources %}
+  <source address="{{if}}"/>
+{%endfor%}
+{%endif%}
+{% if item.services is defined %}
+{% for srv in item.services %}
+  <service name="{{srv}}"/>
+{%endfor%}
+{%endif%}
+{% if item.ports is defined %}
+{% for p in item.ports %}
+  <port port="{{p.port}}" protocol="{{p.protocol}}"/>
+{%endfor%}
+{%endif%}
+{% if item.masquerade is defined and item.masquerade %}
+  <masquerade/>
+{%endif%}
+{% if item.forward_ports is defined %}
+{% for fp in item.forward_ports %}
+  <forward-port port="{{fp.port}}" protocol="{{fp.protocol}}" to-port="{{fp.to_port}}" to-addr="{{fp.to_addr}}"/>
+{%endfor%}
+{%endif%}
+</zone>

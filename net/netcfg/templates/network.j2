@@ -1,0 +1,18 @@
+# ANSIBLE GENERATED.
+{% if netcfg.dns is defined %}
+{% for ns in netcfg.dns  %}
+DNS{{ loop.index }}={{ ns }}
+{% endfor %}
+{% endif %}
+
+{% if netcfg.search is defined %}
+SEARCH={{ netcfg.search }}
+{% endif %}
+
+{% if netcfg.hostname is defined %}
+HOSTNAME={{ netcfg.hostname }}
+{% endif %}
+
+{% if netcfg.gateway is defined %}
+GATEWAY={{ netcfg.gateway }}
+{% endif %}

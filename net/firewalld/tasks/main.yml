@@ -1,0 +1,63 @@
+---
+# Copyright (C) 2015 BROADSoftware
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#limitations under the License.
+#
+
+
+- yum: name=firewalld state=present
+
+
+- name: Define firewalld services
+  template:
+    src: service.j2
+    dest: "/etc/firewalld/services/{{item.name}}.xml"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  with_items: "{{firewalld.services}}"
+  notify: reload firewalld
+
+- name: Configure firewalld zones
+  template:
+    src: zone.j2
+    dest: "/etc/firewalld/zones/{{item.name}}.xml"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  with_items: "{{firewalld.zones}}"
+  notify: reload firewalld
+
+
+- name: Configure firewalld
+  template:
+    src: firewalld.conf.j2
+    dest: "/etc/firewalld/firewalld.conf"
+    owner: root
+    group: root
+    mode: 0640
+    backup: yes
+  notify: reload firewalld
+
+
+- meta: flush_handlers
+    
+- name: Enable firewalld
+  service:
+    name: firewalld
+    enabled: yes
+    state: started          
+  
+  
