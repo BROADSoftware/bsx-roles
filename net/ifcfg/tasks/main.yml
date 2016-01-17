@@ -22,7 +22,6 @@
     group: root
     mode: 0644
     backup: yes
-  when: ifcfg.enabled is undefined or ifcfg.enabled 
   notify: restart network
   
   
@@ -34,7 +33,6 @@
     group: root
     mode: 0644
     backup: yes
-  when: ifcfg.enabled is undefined or ifcfg.enabled 
   notify: restart network
 
 - name: Shutdown interface {{ if_label }}
