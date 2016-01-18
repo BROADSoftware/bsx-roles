@@ -71,8 +71,13 @@
   notify:
    - restart openvpn (c7)
    - restart openvpn (c6)
-   
-   
+ 
+- name: Patch systemd module in order to ensure openvpn start AFTER network is up
+  replace:
+    dest: /usr/lib/systemd/system/openvpn@.service
+    regexp: 'After=network\.target'
+    replace: 'After=network-online.target\nWants=network-online.target'
+    backup: no
 
 - meta: flush_handlers
     
