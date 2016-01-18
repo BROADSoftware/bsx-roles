@@ -13,6 +13,10 @@ NM_CONTROLLED=no
 VLAN={{ ifcfg.vlan }}
 {% endif %}
 
+{% if ifcfg.promisc is defined %}
+PROMISC={{ ifcfg.promisc }}
+{% endif %}
+
 DEVICE={{ ifcfg.device }}
 
 {% if ifcfg.bootproto is defined and (ifcfg.bootproto == 'static' or ifcfg.bootproto == 'none') %}
@@ -22,6 +26,9 @@ IPADDR={{ ifcfg.address }}
 {% endif %}
 {% if ifcfg.netmask is defined %}
 NETMASK={{ ifcfg.netmask }}
+{% endif %}
+{% if ifcfg.broadcast is defined %}
+BROADCAST={{ ifcfg.broadcast }}
 {% endif %}
 {% if ifcfg.gateway is defined %}
 GATEWAY={{ ifcfg.gateway }}
