@@ -1,0 +1,66 @@
+---
+# Copyright (C) 2015 BROADSoftware
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#limitations under the License.
+#
+
+# Add  qemu-kvm ? 
+- name: install KVM host packages
+  yum: pkg=kvm,libvirt state=present
+  
+- name: Ensure libvirtd is up and running
+  service:
+    name: libvirtd
+    enabled: yes
+    state: started
+   
+# Add to qemu group? 
+- name: Add users to kvm groups
+  user: 
+    name: "{{item}}"
+    groups: libvirt,kvm
+  with_items: "{{kvm_users}}"
+
+- name: Test if network 'default' is running
+  shell: virsh net-list
+  register: net_list
+  changed_when: false
+
+# We stop default network, as we don't want net to be performed at host level. Also, include a dnsmasq, which prevent another one running
+- name: Stop default network
+  shell: virsh net-destroy default
+  when: net_list.stdout.find('default') != -1
+    
+- name: Disable default network autostart
+  shell: virsh net-autostart default --disable
+  args:
+    removes: /etc/libvirt/qemu/networks/autostart/default.xml
+    
+
+- name: Create data folders
+  file: path=/vol{{item}}/libvirt/images owner=root group=root state=directory mode=0755
+  with_items: kvm_volumes_tag_list
+
+- name: create pool
+  shell: virsh pool-define-as images{{item}} dir --target /vol{{item}}/libvirt/images
+  args:
+    creates: /etc/libvirt/storage/images{{item}}.xml
+  with_items: kvm_volumes_tag_list
+    
+- name: start pool
+  shell: virsh pool-start images{{item}};  virsh  pool-autostart images{{item}}
+  args:
+    creates: /etc/libvirt/storage/autostart/images{{item}}.xml
+  with_items: kvm_volumes_tag_list
+   
+    

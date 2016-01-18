@@ -1,0 +1,5 @@
+
+
+
+- name: Intall packages
+  yum: pkg=cobbler,cobbler-web,httpd   state=present

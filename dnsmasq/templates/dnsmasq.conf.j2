@@ -1,6 +1,10 @@
 # ANSIBLE GENERATED - DO NOT EDIT
 
 
+{% if dnsmasq.dns_port is defined %}
+port={{dnsmasq.dns_port}}
+{% endif %}
+
 no-hosts
 addn-hosts=/etc/dnsmasq/hosts
 
