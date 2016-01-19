@@ -1,5 +1,9 @@
 
 
+# Using dnsmasq for DHCP requires that you use it for DNS. 
+# So, to be more flexible, we will use isc dhcp, this letting DNS mgmt left to choice.
+
+
 
 - name: Intall packages
   yum: pkg=cobbler,cobbler-web,httpd   state=present
