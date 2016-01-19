@@ -14,13 +14,17 @@
 #limitations under the License.
 #
 
+- name: Install shorewall package
+  yum: pkg=shorewall state=present
+  
 - name: Create a folder to save original files
   file: path=/etc/shorewall/virgin state=directory owner=root group=root mode=0755
 
 - name: Save original config files
-  shell: mv /etc/shorewall/* /etc/shorewall/virgin/shorewall.conf
+  shell: mv /etc/shorewall/* /etc/shorewall/virgin/
   args:
-    creates: /etc/shorewall/virgin/
+    creates: /etc/shorewall/virgin/shorewall.conf
+  failed_when: false
 
 - name: Setup Shorewall config files
   template:
