@@ -1,0 +1,10 @@
+
+
+
+cobbler:
+  server_ip: 10.10.10.10
+  next_server_ip: 10.10.10.10
+  distros:
+  - name: centos7.2
+    url: http://mirror.ibcp.fr/pub/Centos/7/isos/x86_64/CentOS-7-x86_64-DVD-1511.iso 
+    

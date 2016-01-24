@@ -1,0 +1,5 @@
+mkdir --mode=700 /root/.ssh
+cat >> /root/.ssh/authorized_keys << "PUBLIC_KEY"
+$SNIPPET('build_key_pub')
+PUBLIC_KEY
+chmod 600 /root/.ssh/authorized_keys

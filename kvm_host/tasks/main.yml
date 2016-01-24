@@ -45,10 +45,11 @@
   shell: virsh net-autostart default --disable
   args:
     removes: /etc/libvirt/qemu/networks/autostart/default.xml
-    
+
+# Should we also shutdown dnsmasq ??    
 
 - name: Create data folders
-  file: path=/vol{{item}}/libvirt/images owner=root group=root state=directory mode=0755
+  file: path=/vol{{item}}/libvirt/images owner=root group=kvm state=directory mode=0775
   with_items: kvm_volumes_tag_list
 
 - name: create pool

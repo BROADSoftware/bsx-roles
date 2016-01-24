@@ -5,5 +5,96 @@
 
 
 
-- name: Intall packages
-  yum: pkg=cobbler,cobbler-web,httpd   state=present
+- name: Install packages
+  yum: pkg=cobbler,cobbler-web,httpd,dhcp,yum-utils,pykickstart,xinetd   state=present
+  
+- name: Populate cobbler's loaders
+  shell: cobbler get-loaders  
+  args:
+    creates: /var/lib/cobbler/loaders/pxelinux.0
+  
+- name: Set config files
+  template:
+    src: "{{item}}.j2"
+    dest: "/etc/cobbler/{{item}}"
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+  - settings
+  - modules.conf
+  - tftpd.template
+  notify:
+  - Cobbler sync
+  - Restart cobblerd
+  - Restart xinetd
+  
+  
+- name: Set kickstart files in place
+  template:
+    src: "ks/{{item}}.j2"
+    dest: "/var/lib/cobbler/kickstarts/{{item}}"
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+  - centos7-bsa.ks
+  
+  
+- name: Set snippet files in place
+  template:
+    src: "snippets/{{item}}.j2"
+    dest: "/var/lib/cobbler/snippets/{{item}}"
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+  - install_build_key_pub
+  - install_root_key_pub
+  - install_root_key_priv
+
+- name: Create snippets paths
+  file: path={{item}} owner=root group=root mode=0755 state=directory
+  with_items:
+  - /var/lib/cobbler/snippets/per_system/
+  - /var/lib/cobbler/snippets/per_system/build_key_pub
+  - /var/lib/cobbler/snippets/per_system/root_key_pub
+  - /var/lib/cobbler/snippets/per_system/root_key_priv
+  
+  
+
+- meta: flush_handlers
+    
+- service: name=cobblerd enabled=yes state=started       
+- service: name=httpd enabled=yes state=started
+- service: name=xinetd enabled=yes state=started
+
+- name: Check distro
+  shell: cobbler distro list 
+  register: distros
+  changed_when: false
+  
+- name: Import missing distro (May take some time....)
+  script: import.sh --url {{item.url}} --name {{item.name}}
+  when: distros.stdout.find(item.name) == -1
+  with_items: cobbler.distros
+          
+- name: Check profiles
+  shell: cobbler profile list 
+  register: profiles
+  changed_when: false
+  
+- name: Import missing profile 
+  shell: cobbler profile add --clobber --name={{item.name}} --distro={{item.distro}} --kickstart=/var/lib/cobbler/kickstarts/{{item.kickstart}}
+  when: profiles.stdout.find(item.name) == -1
+  with_items: cobbler.profiles
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
