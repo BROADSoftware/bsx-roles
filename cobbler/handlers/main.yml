@@ -1,12 +1,12 @@
 ---
-- name: Cobbler sync
-  shell: cobbler sync
-
 - name: Restart cobblerd
   service: name=cobblerd state=restarted
 
 - name: Restart httpd
   service: name=httpd state=restarted
+
+- name: Cobbler sync
+  shell: cobbler sync
 
 - name: Restart xinetd
   service: name=xinetd state=restarted

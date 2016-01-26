@@ -14,9 +14,8 @@
 #limitations under the License.
 #
 
-# Add  qemu-kvm ? 
 - name: install KVM host packages
-  yum: pkg=kvm,libvirt state=present
+  yum: pkg=kvm,libvirt,qemu-kvm state=present
   
 - name: Ensure libvirtd is up and running
   service:

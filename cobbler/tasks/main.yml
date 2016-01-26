@@ -43,17 +43,18 @@
   - /var/lib/cobbler/snippets/per_system/build_key_pub
   - /var/lib/cobbler/snippets/per_system/host_key_pub
   - /var/lib/cobbler/snippets/per_system/host_key_priv
-  
-- meta: flush_handlers
-    
-- service: name=cobblerd enabled=yes state=started       
+
 - service: name=httpd enabled=yes state=started
-- service: name=xinetd enabled=yes state=started
 
 - name: Populate cobbler's loaders
   shell: cobbler get-loaders  
   args:
     creates: /var/lib/cobbler/loaders/pxelinux.0
+  
+- meta: flush_handlers
+
+- service: name=cobblerd enabled=yes state=started       
+- service: name=xinetd enabled=yes state=started
   
 - name: Check distro
   shell: cobbler distro list 

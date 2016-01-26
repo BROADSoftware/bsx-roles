@@ -14,7 +14,6 @@
 #limitations under the License.
 #
 
-# Add  qemu-kvm ? 
 
 
 - name: install X11 stuff
@@ -32,6 +31,7 @@
   with_items:
   - virt-install
   - virt-manager
+  - virt-viewer
   
  
 # Add to qemu group? 
