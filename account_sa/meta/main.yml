@@ -1,7 +1,0 @@
----
-# Dependencies for account_sa role
-
-dependencies:
-  - { role: yaegashi.blockinfile }
- 
-  

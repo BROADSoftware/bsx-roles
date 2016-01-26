@@ -1,5 +1,5 @@
 cat > /etc/ssh/ssh_host_rsa_key << "PRIVATE_KEY"
-$SNIPPET('root_key_priv')
+$SNIPPET('host_key_priv')
 PRIVATE_KEY
 chmod 640 /etc/ssh/ssh_host_rsa_key
 chgrp ssh_keys /etc/ssh/ssh_host_rsa_key

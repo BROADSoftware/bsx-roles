@@ -8,11 +8,6 @@
 - name: Install packages
   yum: pkg=cobbler,cobbler-web,httpd,dhcp,yum-utils,pykickstart,xinetd   state=present
   
-- name: Populate cobbler's loaders
-  shell: cobbler get-loaders  
-  args:
-    creates: /var/lib/cobbler/loaders/pxelinux.0
-  
 - name: Set config files
   template:
     src: "{{item}}.j2"
@@ -25,21 +20,9 @@
   - modules.conf
   - tftpd.template
   notify:
-  - Cobbler sync
   - Restart cobblerd
+  - Cobbler sync
   - Restart xinetd
-  
-  
-- name: Set kickstart files in place
-  template:
-    src: "ks/{{item}}.j2"
-    dest: "/var/lib/cobbler/kickstarts/{{item}}"
-    owner: root
-    group: root
-    mode: 0755
-  with_items:
-  - centos7-bsa.ks
-  
   
 - name: Set snippet files in place
   template:
@@ -47,28 +30,31 @@
     dest: "/var/lib/cobbler/snippets/{{item}}"
     owner: root
     group: root
-    mode: 0755
+    mode: 0644
   with_items:
   - install_build_key_pub
-  - install_root_key_pub
-  - install_root_key_priv
+  - install_host_key_pub
+  - install_host_key_priv
 
 - name: Create snippets paths
   file: path={{item}} owner=root group=root mode=0755 state=directory
   with_items:
   - /var/lib/cobbler/snippets/per_system/
   - /var/lib/cobbler/snippets/per_system/build_key_pub
-  - /var/lib/cobbler/snippets/per_system/root_key_pub
-  - /var/lib/cobbler/snippets/per_system/root_key_priv
+  - /var/lib/cobbler/snippets/per_system/host_key_pub
+  - /var/lib/cobbler/snippets/per_system/host_key_priv
   
-  
-
 - meta: flush_handlers
     
 - service: name=cobblerd enabled=yes state=started       
 - service: name=httpd enabled=yes state=started
 - service: name=xinetd enabled=yes state=started
 
+- name: Populate cobbler's loaders
+  shell: cobbler get-loaders  
+  args:
+    creates: /var/lib/cobbler/loaders/pxelinux.0
+  
 - name: Check distro
   shell: cobbler distro list 
   register: distros
@@ -78,18 +64,20 @@
   script: import.sh --url {{item.url}} --name {{item.name}}
   when: distros.stdout.find(item.name) == -1
   with_items: cobbler.distros
-          
-- name: Check profiles
-  shell: cobbler profile list 
-  register: profiles
+   
+- name: Check repositories
+  shell: cobbler repo list
+  register: repositories
   changed_when: false
   
-- name: Import missing profile 
-  shell: cobbler profile add --clobber --name={{item.name}} --distro={{item.distro}} --kickstart=/var/lib/cobbler/kickstarts/{{item.kickstart}}
-  when: profiles.stdout.find(item.name) == -1
-  with_items: cobbler.profiles
-
+- name: Define missing repositories
+  shell: cobbler repo add --name={{item.name}} --mirror={{item.mirror}} --keep-updated=Y --arch=x86_64 --mirror-locally=Y
+  when: repositories.stdout.find(item.name) == -1
+  with_items: cobbler.repositories
   
+  
+- name: Setup a cron for repository update
+  cron: name="Reposync" job="cobbler reposync" minute="0" hour="3" state=present  
   
   
   
