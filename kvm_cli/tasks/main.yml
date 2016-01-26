@@ -15,11 +15,27 @@
 #
 
 # Add  qemu-kvm ? 
+
+
+- name: install X11 stuff
+  yum: pkg={{item}} state=present
+  with_items:
+  - xorg-x11-fonts-ISO8859-1-100dpi
+  - xorg-x11-fonts-ISO8859-1-75dpi
+  - xorg-x11-fonts-misc 
+  - xorg-x11-fonts-Type1 
+  - xorg-x11-font-utils
+  - xorg-x11-xauth
+
 - name: install KVM client packages
-  yum: pkg=virt-install,virt-manager state=present
+  yum: pkg={{item}} state=present
+  with_items:
+  - virt-install
+  - virt-manager
   
  
 # Add to qemu group? 
+
 - name: Add users to kvm groups
   user: 
     name: "{{item}}"
