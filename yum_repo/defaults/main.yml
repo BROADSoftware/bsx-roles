@@ -27,7 +27,7 @@
 # 
 # other:
 #   Remove both original file (Centos-Base.repo and epel.repo) and local-config.repo.
-#   This mode is intended for the case when another tool place its won file in yum.repo.d (i.e. cobbler-config.repo)
+#   This mode is intended for the case when another tool place its own file in yum.repo.d (i.e. cobbler-config.repo)
 #
 # WARNING: The original files are in fact a copy of them, hosted in this role. It is assumed they will not change...
 # WARNING: Due to the previous warning, only centos7 is supported currently
