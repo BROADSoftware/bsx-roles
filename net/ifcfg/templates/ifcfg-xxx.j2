@@ -2,23 +2,18 @@
 {% if ifcfg.name is defined %}
 NAME={{ ifcfg.name }}
 {% endif %}
-
 {% if ifcfg.nm_controlled is defined %}
 NM_CONTROLLED={{ ifcfg.nm_controlled }}
 {% else %}
 NM_CONTROLLED=no
 {% endif %}
-
 {% if ifcfg.vlan is defined %}
 VLAN={{ ifcfg.vlan }}
 {% endif %}
-
 {% if ifcfg.promisc is defined %}
 PROMISC={{ ifcfg.promisc }}
 {% endif %}
-
 DEVICE={{ ifcfg.device }}
-
 {% if ifcfg.bootproto is defined and (ifcfg.bootproto == 'static' or ifcfg.bootproto == 'none') %}
 BOOTPROTO=none
 {% if ifcfg.address is defined %}
@@ -42,11 +37,9 @@ DNS{{ loop.index }}={{ ns }}
 DOMAIN={{ ifcfg.domain }}
 {% endif %}
 {% endif %}
-
 {% if ifcfg.bootproto is defined and ifcfg.bootproto == 'dhcp' %}
 BOOTPROTO=dhcp
 {% endif %}
-
 {% if ifcfg.enabled is defined and not ifcfg.enabled %} 
 ONBOOT=no
 {% else %}
@@ -56,7 +49,6 @@ ONBOOT={{ ifcfg.onboot }}
 ONBOOT=yes
 {% endif %}
 {% endif %}
-
 {% if ifcfg.ipv6 is defined %}
 IPV4_FAILURE_FATAL="no"
 IPV6INIT="yes"
@@ -68,25 +60,29 @@ IPV6_FAILURE_FATAL="no"
 {% else %}
 IPV6INIT=no
 {% endif %}
-
 {% if ifcfg.type is defined %}
 TYPE={{ ifcfg.type }}
 {% endif %}
-
 {% if ifcfg.bridge is defined %}
 BRIDGE={{ ifcfg.bridge }}
 {% endif %}
-
 {% if ifcfg.peerdns is defined %}
 PEERDNS={{ ifcfg.peerdns }}
 {% else %}
 PEERDNS=no
 {% endif %}
-
-
 {% if ifcfg.peerroutes is defined %}
 PEERROUTES={{ ifcfg.peerroutes }}
 {% else %}
 PEERROUTES=yes
 {% endif %}
+{% if ifcfg.master is defined %}
+MASTER={{ ifcfg.master }}
+SLAVE=yes
+{% endif %}
+{% if ifcfg.bonding_opts is defined %}
+BONDING_MASTER=yes
+BONDING_OPTS="{{ifcfg.bonding_opts}}"
+{% endif %}
+
 
