@@ -48,4 +48,8 @@
     name: shorewall
     enabled: yes
     state: started          
-  
+
+- name: reload shorewall in case of network restart 
+  shell: shorewall restart
+  when: (network_service_restart_notification1 is defined and network_service_restart_notification1.changed) or (network_service_restart_notification2 is defined and network_service_restart_notification2.changed)
+    

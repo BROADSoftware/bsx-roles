@@ -14,6 +14,16 @@
 #limitations under the License.
 #
 
+#  NOTES: There is two methods to shutdown an interface:
+#  onboot: "no"
+#   or
+#  enabled: false.
+#  
+#  In first case, interface will remains up until next reboot or explicit ifdown.
+#  In second case, interface will be shutdown immediatly. 
+#      WARNING: Don't do this on the interface used by ansible to access the host, or you will lock down yourself!
+#
+
 - name: Configure interface {{ if_label }}
   template:
     src: ifcfg-xxx.j2

@@ -60,4 +60,12 @@
     enabled: yes
     state: started          
   
+
+- name: reload firewalld in case of network restart 
+  service: 
+    name: firewalld
+    state: restarted
+  when: (network_service_restart_notification1 is defined and network_service_restart_notification1.changed) or (network_service_restart_notification2 is defined and network_service_restart_notification2.changed)
   
+  
+    

@@ -17,6 +17,7 @@
 
 - name: restart network
   service: name=network state=restarted
+  register: network_service_restart_notification2
   
   
 - name: change hostname

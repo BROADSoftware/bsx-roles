@@ -13,3 +13,6 @@ HOSTNAME={{ netcfg.hostname }}
 {% if netcfg.gateway is defined %}
 GATEWAY={{ netcfg.gateway }}
 {% endif %}
+{% if netcfg.gatewaydev is defined %}
+GATEWAYDEV={{ netcfg.gatewaydev }}
+{% endif %}
