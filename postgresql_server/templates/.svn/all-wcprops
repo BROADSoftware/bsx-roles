@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BIGDATA_INCUBATOR/!svn/ver/23/its/bdod/trunk/roles/postgresql_server/templates
+END
+pg_hba.conf.v8.j2
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/BIGDATA_INCUBATOR/!svn/ver/23/its/bdod/trunk/roles/postgresql_server/templates/pg_hba.conf.v8.j2
+END
+pg_hba.conf.v9.j2
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/BIGDATA_INCUBATOR/!svn/ver/23/its/bdod/trunk/roles/postgresql_server/templates/pg_hba.conf.v9.j2
+END
+postgresql.conf.v8.j2
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/BIGDATA_INCUBATOR/!svn/ver/23/its/bdod/trunk/roles/postgresql_server/templates/postgresql.conf.v8.j2
+END
+postgresql.conf.v9.j2
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/BIGDATA_INCUBATOR/!svn/ver/23/its/bdod/trunk/roles/postgresql_server/templates/postgresql.conf.v9.j2
+END
