@@ -65,10 +65,10 @@
     passno: '0'
     src: 'UUID={{ item.1.stdout }}'
     state: '{{ item.0.mount_state|d("mounted") }}'
-  with_together:
-    - '{{ disk_additional_disks }}'
-    - '{{ disk_blkid.results }}'
   when: disk_additional_disks is defined  
+  with_together:
+    - '{{ disk_additional_disks | default([]) }}'
+    - '{{ disk_blkid.results }}'
   tags:
     - disk
 

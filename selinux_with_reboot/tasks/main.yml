@@ -21,7 +21,7 @@
 - yum: pkg=libselinux-python state=present
 
 
-- name: "SELinux set to {{ selinux_state }"
+- name: "SELinux set to {{ selinux_state }}"
   selinux: state="{{ selinux_state }}" policy="{{ selinux_policy }}"
   notify: 
   - reboot

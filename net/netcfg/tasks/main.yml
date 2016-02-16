@@ -14,8 +14,8 @@
 #limitations under the License.
 #
 
-- name: Disable NetworkManager
-  service: name=NetworkManager state=stopped enabled=no
+#- name: Disable NetworkManager
+#  service: name=NetworkManager state=stopped enabled=no
 
 - name: Remove NetworkManager
   yum: name=NetworkManager state=absent
