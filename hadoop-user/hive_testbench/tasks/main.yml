@@ -1,0 +1,38 @@
+---
+# Copyright (C) 2015 BROADSoftware
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#limitations under the License.
+#
+
+
+- name: Intall git, gcc
+  yum: pkg=git,gcc state=present
+  
+- name: Ensure working folder
+  file: path={{testbench_unix_folder}} owner={{testbench_user}} group={{testbench_group}} state=directory
+    
+- name: clone hive-testbench github repo
+  git: repo=https://github.com/hortonworks/hive-testbench.git dest={{testbench_unix_folder}} 
+  become: yes
+  become_user: "{{testbench_user}}"
+
+- name: Build tpcds generator
+  shell: cd {{testbench_unix_folder}}; ./tpcds-build.sh
+  become: yes
+  become_user: "{{testbench_user}}"
+  args:
+    creates: "{{testbench_unix_folder}}/tpcds-gen/target/tpcds-gen-1.0-SNAPSHOT.jar"
+
+- debug: msg="Now, as '{{testbench_user}}' user, cd {{testbench_unix_folder}} and launch ./tpcds-setup.sh 1000 to generate 1TB of data (May take several hours)"
+    
+    

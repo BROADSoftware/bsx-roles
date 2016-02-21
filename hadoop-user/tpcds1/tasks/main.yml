@@ -24,15 +24,23 @@
 
 
 - get_url: url={{dsgenv1_zip_url}} dest={{tpcds_unix_folder}}/DSGen_v1.1.0.zip
+  become: yes
+  become_user: "{{tpcds_user}}"
+  
   
 - name: Build DSGen
-  raw: su - {{tpcds_user}} -c "cd {{tpcds_unix_folder}}; unzip -u DSGen_v1.1.0.zip; cd tools; make"
+  shell: cd {{tpcds_unix_folder}}; unzip -u DSGen_v1.1.0.zip; cd tools; make
+  become: yes
+  become_user: "{{tpcds_user}}"
   args:
     creates: "{{tpcds_unix_folder}}/tools/dsdgen"
 
 - file: path=/{{tpcds_unix_folder}}/data1  owner={{tpcds_user}} group={{tpcds_group}} state=directory mode=0755
+
 - name: Generate data ({{tpcds_size_gb}}G). Will take some times
   shell: cd {{tpcds_unix_folder}}/tools/; ./dsdgen -dir {{tpcds_unix_folder}}/data1 -scale {{tpcds_size_gb}}
+  become: yes
+  become_user: "{{tpcds_user}}"
   args:
     creates: "{{tpcds_unix_folder}}/data1/web_sales.dat"
       
@@ -42,6 +50,8 @@
     owner: "{{tpcds_user}}"
     group: "{{tpcds_group}}"
     mode: 0644
+  become: yes
+  become_user: "{{tpcds_user}}"
   with_items:
   - create_db.hql
   - load_db.hql
@@ -52,13 +62,18 @@
 
 - name: Create tpcds database and schema
   hdfs_cmd:
-    cmd: sudo -u {{tpcds_user}} hive -f {{tpcds_unix_folder}}/create_db.hql
+    cmd: hive -f {{tpcds_unix_folder}}/create_db.hql
     hdfs_creates: "{{tpcds_hdfs_folder}}/db/{{tpcds_hive_db}}"
+  become: yes
+  become_user: "{{tpcds_user}}"
+  
   
 - name: Load data in HDFS
   hdfs_cmd:
-    cmd: sudo -u {{tpcds_user}} hive -f  {{tpcds_unix_folder}}/load_db.hql
+    cmd: hive -f  {{tpcds_unix_folder}}/load_db.hql
     hdfs_creates: "{{tpcds_hdfs_folder}}/db/{{tpcds_hive_db}}/call_center/call_center.dat"
+  become: yes
+  become_user: "{{tpcds_user}}"
   
      
      
