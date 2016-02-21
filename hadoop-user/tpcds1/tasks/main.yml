@@ -23,7 +23,7 @@
 - hdfs_file: hdfs_path={{tpcds_hdfs_folder}} default_owner={{tpcds_user}} default_group={{tpcds_group}} default_mode=0755 state=directory
 
 
-- get_url: url={{misc_repository_url}}/DSGen_v1.1.0.zip dest={{tpcds_unix_folder}}/DSGen_v1.1.0.zip
+- get_url: url={{dsgenv1_zip_url}} dest={{tpcds_unix_folder}}/DSGen_v1.1.0.zip
   
 - name: Build DSGen
   raw: su - {{tpcds_user}} -c "cd {{tpcds_unix_folder}}; unzip -u DSGen_v1.1.0.zip; cd tools; make"

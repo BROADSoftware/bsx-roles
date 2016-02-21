@@ -15,8 +15,7 @@
 #
 
 
-# This user must be create prior to this role
-# tpcds_user: xxxx
+# tpcds_user must be create prior to this role (Also as hdfs user)
 
 tpcds_group: "{{tpcds_user}}"
 
@@ -30,4 +29,4 @@ tpcds_hive_db: tpcds
 
 tpcds_size_gb: 1
 
-
+dsgenv1_zip_url: "{{some_repository_url}}/misc/DSGen_v1.1.0.zip"

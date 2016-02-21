@@ -1,0 +1,8 @@
+---
+
+maven_version: "3.3.9"
+
+maven_tgz_url: http://apache.crihan.fr/dist/maven/maven-3/{{ maven_version }}/binaries/apache-maven-{{ maven_version }}-bin.tar.gz
+
+maven_path_files: []
+#- /home/user/.bashrc

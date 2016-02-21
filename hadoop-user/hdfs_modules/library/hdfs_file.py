@@ -52,7 +52,7 @@ options:
     default: None
   state:
     description:
-      - If C(directory), all immediate subdirectories will be created if they
+      - If C(directory), all immediate sub-directories will be created if they
         do not exists, by calling HDFS FileSystem.mkdirs
         If C(file), the file will NOT be created if it does not exist.
         In both cases, owner, group and mode will be adjusted to provided value.
