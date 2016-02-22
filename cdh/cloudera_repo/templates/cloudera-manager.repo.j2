@@ -1,0 +1,10 @@
+[cloudera-manager]
+# Packages for Cloudera Manager, Version 5, on RedHat or CentOS 7 x86_64           	  
+name=Cloudera Manager
+baseurl={{cloudera_manager_baseurl}}
+{% if cloudera_manager_gpgkey is defined %}
+gpgkey={{cloudera_manager_gpgkey}}    
+gpgcheck = 1
+{% else %}
+gpgcheck = 0
+{% endif %}
