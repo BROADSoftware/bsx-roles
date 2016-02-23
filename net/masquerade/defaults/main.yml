@@ -1,0 +1,3 @@
+
+# This is the interface for connection to outside world (i.e. Internet
+#masquerade_out_interface: enp0s3
