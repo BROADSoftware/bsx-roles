@@ -28,8 +28,8 @@
 - name: Do not drop setpcap and setfcap in /usr/share/lxc/config/centos.common.conf
   replace :
     dest: /usr/share/lxc/config/centos.common.conf
-    regexp: lxc.cap.drop = mac_admin mac_override setfcap setpcap
-    replace: lxc.cap.drop = mac_admin mac_override
+    regexp: "^lxc.cap.drop = mac_admin mac_override.*"
+    replace: lxc.cap.drop = mac_admin mac_override  #setfcap setpcap
     
 - name: Do not drop sys_time in /usr/share/lxc/config/centos.common.conf (To allow ntpd)
   replace :

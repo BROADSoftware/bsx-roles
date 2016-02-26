@@ -91,14 +91,15 @@
     replace: "root:$6$LfvmxU9s$CbeRJ/KqreYfL7wC8Bl2hDfKzXBLv1ElXR3mBj6xU/d/3/RNO/fzqGRltAjPW22QwKI7I3dcdRWCKNWGP6nec/:16727:0:99999:7:::"
 
 - name: "{{lxc_guest.name}}: Setup local yum repository"
-  shell: cp -r /etc/yum.repos.d/*  /var/lib/lxc/{{lxc_guest.name}}/rootfs/etc/yum.repos.d; cp /etc/pki/rpm-gpg/*  /var/lib/lxc/{{lxc_guest.name}}/rootfs/etc/pki/rpm-gpg/
+  shell: rm -f /var/lib/lxc/{{lxc_guest.name}}/rootfs/etc/yum.repos.d/*; cp -r /etc/yum.repos.d/*  /var/lib/lxc/{{lxc_guest.name}}/rootfs/etc/yum.repos.d; cp /etc/pki/rpm-gpg/*  /var/lib/lxc/{{lxc_guest.name}}/rootfs/etc/pki/rpm-gpg/
   args:
     creates: /var/lib/lxc/{{lxc_guest.name}}/rootfs/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+    warn: no
         
 - name: "{{lxc_guest.name}}: Copy host key from host"
   shell: cp /etc/ssh/ssh_host_rsa_key* /var/lib/lxc/{{lxc_guest.name}}/rootfs/etc/ssh
   args:
-    creates: /var/lib/lxc/{{lxc_guest.name}}/rootfs/etc/ssh/etc/ssh/ssh_host_rsa_key.pub
+    creates: /var/lib/lxc/{{lxc_guest.name}}/rootfs/etc/ssh/ssh_host_rsa_key.pub
         
 - name: "{{lxc_guest.name}}: Adjust rights for host key private file"
   file: path=/var/lib/lxc/{{lxc_guest.name}}/rootfs/etc/ssh/ssh_host_rsa_key owner=root group=root mode=0600
