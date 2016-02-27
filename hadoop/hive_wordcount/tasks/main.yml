@@ -1,0 +1,88 @@
+
+
+
+- name: Create local folder
+  file:  path={{hwc_unix_folder}} state=directory owner={{hwc_user}} group={{hwc_group}} mode=0755
+  become: yes
+  become_user: "{{hwc_user}}"
+
+# Create a working folder in user's home
+- hdfs_file: hdfs_path={{hwc_hdfs_folder}} default_owner={{hwc_user}} default_group={{hwc_group}} default_mode=0755 state=directory
+
+- name: Copy hql files
+  template: dest={{hwc_unix_folder}}/{{item}} src={{item}}.j2 
+  become: yes
+  become_user: "{{hwc_user}}"
+  with_items:
+  - createdb.hql
+  - dropdb.hql
+  - hwc1.hql
+  - hwc2.hql
+  - hwc3.hql
+  - request1.hql
+
+- name: copy data files
+  copy: dest={{hwc_unix_folder}}/{{item}} src={{item}}
+  become: yes
+  become_user: "{{hwc_user}}"
+  with_items:
+  - "{{data_file1}}"
+  - "{{data_file2}}"
+
+      
+- name: Create hive database 
+  hdfs_cmd:
+    cmd: hive -f {{hwc_unix_folder}}/createdb.hql
+    hdfs_creates: "{{hwc_hive_db_location}}"
+    uses_shell: yes
+  become: yes
+  become_user: "{{hwc_user}}"
+  
+      
+- name: Create wordcount1 table 
+  hdfs_cmd:
+    cmd: hive -f {{hwc_unix_folder}}/hwc1.hql
+    hdfs_creates: "{{hwc_hive_db_location}}/wordcount1"
+    uses_shell: yes
+  become: yes
+  become_user: "{{hwc_user}}"
+  
+- name: Create wordcount2 table 
+  hdfs_cmd:
+    cmd: hive -f {{hwc_unix_folder}}/hwc2.hql
+    hdfs_creates: "{{hwc_hive_db_location}}/wordcount2"
+    uses_shell: yes
+  become: yes
+  become_user: "{{hwc_user}}"
+  
+- name: Create wordcount3 table 
+  hdfs_cmd:
+    cmd: hive -f {{hwc_unix_folder}}/hwc3.hql
+    hdfs_creates: "{{hwc_hive_db_location}}/wordcount3"
+    uses_shell: yes
+  become: yes
+  become_user: "{{hwc_user}}"
+  
+ 
+# hive -e "xxx" Does not works with our hive installation  
+#- name: Some results
+#  shell: hive -e "SELECT * FROM {{hwc_hive_db_name}}.wordcount3 WHERE LENGTH(word) > 4 ORDER BY count2 DESC LIMIT 10;"
+#  become: yes
+#  become_user: "{{hwc_user}}"
+#  register: req_result
+  
+  
+- name: A test request
+  shell: hive -f {{hwc_unix_folder}}/request1.hql
+  become: yes
+  become_user: "{{hwc_user}}"
+  register: req_result
+  changed_when: false
+  
+- debug: var=req_result.stdout_lines
+
+- name: Test request result
+  fail: msg="Returned data seems not correct"
+  when: ('shall') not in req_result.stdout_lines[0]
+  
+   

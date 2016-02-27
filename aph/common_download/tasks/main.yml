@@ -55,3 +55,13 @@
     group: hadoop
     mode: 0755
     backup: no
+
+- name: Create /etc/hadoop
+  file: path=/etc/hadoop owner=root group=root mode=0755 state=directory
+
+- name: Create /etc/hadoop/conf
+  file: path=/etc/hadoop/conf owner=root group=root mode=0777 state=link src=/opt/hadoop-{{ hadoop_version }}/etc/hadoop
+  
+
+   
+       

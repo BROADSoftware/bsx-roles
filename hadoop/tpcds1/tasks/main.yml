@@ -15,7 +15,7 @@
 #
 
 - name: Install gcc and unzip
-  yum: pkg=gcc,unzip state=present
+  yum: pkg=gcc,unzip,make state=present
   
 - name: Create local folder
   file:  path={{tpcds_unix_folder}} state=directory owner={{tpcds_user}} group={{tpcds_group}} mode=0755
@@ -65,6 +65,7 @@
   hdfs_cmd:
     cmd: hive -f {{tpcds_unix_folder}}/create_db.hql
     hdfs_creates: "{{tpcds_hdfs_folder}}/db/{{tpcds_hive_db}}"
+    uses_shell: yes
   become: yes
   become_user: "{{tpcds_user}}"
   
@@ -73,6 +74,7 @@
   hdfs_cmd:
     cmd: hive -f  {{tpcds_unix_folder}}/load_db.hql
     hdfs_creates: "{{tpcds_hdfs_folder}}/db/{{tpcds_hive_db}}/call_center/call_center.dat"
+    uses_shell: yes
   become: yes
   become_user: "{{tpcds_user}}"
   

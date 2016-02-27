@@ -1,0 +1,5 @@
+
+CREATE TABLE IF NOT EXISTS {{hwc_hive_db_name}}.doc1 (line STRING);
+LOAD DATA LOCAL INPATH '{{hwc_unix_folder}}/{{data_file1}}' OVERWRITE INTO TABLE {{hwc_hive_db_name}}.doc1;
+CREATE TABLE {{hwc_hive_db_name}}.wordcount1 AS SELECT word, count(1) AS count FROM (SELECT explode(split(line, '\\\s')) AS word FROM {{hwc_hive_db_name}}.doc1) AS w GROUP BY word;
+

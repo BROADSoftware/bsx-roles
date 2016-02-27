@@ -73,11 +73,11 @@
 # ------------------------------------------------------- Create default warehouse folder
  
 - name: Create /apps/hive HDFS folder
-  hdfs_file: hdfs_path=/apps/hive owner=hdfs group=hdfs mode=0755 state=directory hadoop_conf_dir=/opt/hadoop-{{ hadoop_version }}/etc/hadoop
+  hdfs_file: hdfs_path=/apps/hive owner=hdfs group=hdfs mode=0755 state=directory 
   when: hostvars[groups['hadoop_clients'][0]]['ansible_nodename']  == ansible_nodename
 
 - name: Create /apps/hive/warehouse HDFS folder
-  hdfs_file: hdfs_path=/apps/hive/warehouse group=hdfs mode=0777 state=directory hadoop_conf_dir=/opt/hadoop-{{ hadoop_version }}/etc/hadoop
+  hdfs_file: hdfs_path=/apps/hive/warehouse group=hdfs mode=0777 state=directory 
   when: hostvars[groups['hadoop_clients'][0]]['ansible_nodename']  == ansible_nodename
   
   

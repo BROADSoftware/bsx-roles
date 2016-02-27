@@ -1,0 +1,2 @@
+CREATE TABLE {{hwc_hive_db_name}}.wordcount3 AS SELECT wc1.word, wc1.count AS count1, wc2.count AS count2, wc1.count + wc2.count AS count FROM {{hwc_hive_db_name}}.wordcount1 AS wc1 INNER JOIN {{hwc_hive_db_name}}.wordcount2 AS wc2 ON wc1.word = wc2.word WHERE length(wc1.word) > 0;
+

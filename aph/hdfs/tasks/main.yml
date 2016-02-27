@@ -179,15 +179,15 @@
 # ===================================================== Create first folder
 
 - name: Create /user HDFS folder
-  hdfs_file: hdfs_path=/user owner=hdfs group=hdfs mode=0755 state=directory hadoop_conf_dir=/opt/hadoop-{{ hadoop_version }}/etc/hadoop
+  hdfs_file: hdfs_path=/user owner=hdfs group=hdfs mode=0755 state=directory 
   when: hostvars[groups['hdfs_pnn'][0]]['ansible_nodename']  == ansible_nodename
 
 - name: Create /user/hdfs HDFS folder
-  hdfs_file: hdfs_path=/user/hdfs owner=hdfs group=hdfs mode=0755 state=directory hadoop_conf_dir=/opt/hadoop-{{ hadoop_version }}/etc/hadoop
+  hdfs_file: hdfs_path=/user/hdfs owner=hdfs group=hdfs mode=0755 state=directory 
   when: hostvars[groups['hdfs_pnn'][0]]['ansible_nodename']  == ansible_nodename
   
 - name: Create /tmp HDFS folder
-  hdfs_file: hdfs_path=/tmp owner=hdfs group=hdfs mode=0777 state=directory hadoop_conf_dir=/opt/hadoop-{{ hadoop_version }}/etc/hadoop
+  hdfs_file: hdfs_path=/tmp owner=hdfs group=hdfs mode=0777 state=directory 
   when: hostvars[groups['hdfs_pnn'][0]]['ansible_nodename']  == ansible_nodename
       
 
