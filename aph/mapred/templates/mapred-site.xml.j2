@@ -17,5 +17,15 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
-
+ <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+  
+  <!-- http://stackoverflow.com/questions/17507670/basic-permissions-error-in-mr2 -->
+  <property>
+    <name>yarn.app.mapreduce.am.staging-dir</name>
+    <value>/user</value>
+  </property>  
+  
 </configuration>

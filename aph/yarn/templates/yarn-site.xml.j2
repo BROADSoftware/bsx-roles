@@ -13,6 +13,35 @@
     <name>yarn.resourcemanager.hostname</name>
     <value>{{ hostvars[groups['yarn_rm'][0]]['ansible_fqdn'] }}</value>
   </property>
+  
+  
+  <!-- http://stackoverflow.com/questions/30921838/auxservicemapreduce-shuffle-does-not-exist-on-hive-1-2-0 -->
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+    <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+  </property>
+
+
+  <!-- If we want to aggregate logs from datanodes to hdfs
+  Would need to create appropriate folder in HDFS
+  WARNING yarn.log.aggregation-enable for cloudera (dot instead of dash) ?
+   <property>
+    <name>yarn.log-aggregation-enable</name>
+    <value>true</value> 
+  </property>  
+  <property>
+    <description>Where to aggregate logs</description>
+    <name>yarn.nodemanager.remote-app-log-dir</name>
+    <value>hdfs://<namenode-host.company.com>:8020/var/log/hadoop-yarn/apps</value>
+  </property>
+  -->
+  
+  
 </configuration>
 
 

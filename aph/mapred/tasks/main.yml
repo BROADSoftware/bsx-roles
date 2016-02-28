@@ -1,0 +1,90 @@
+---
+# Copyright (C) 2015 BROADSoftware
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#limitations under the License.
+#
+
+
+- name: Create mapred user
+  user:
+    name: mapred
+    system: true
+    createhome: no
+    group: hadoop
+    shell: /sbin/nologin
+    home: /tmp
+    state: present
+
+- name: Create mapred log dir
+  file: path=/var/log/mapred state=directory owner=mapred group=hadoop mode=0755
+
+- name: Create mapred pid dir
+  file: path=/var/run/mapred state=directory owner=mapred group=hadoop mode=0755
+ 
+- name: Adjust mapred-config.sh
+  blockinfile:
+    dest: /opt/hadoop-{{ hadoop_version }}/libexec/mapred-config.sh
+    backup: yes
+    insertafter: "limitations under the License\\."
+    marker: "# {mark} Ansible managed block"
+    content: |
+      export JAVA_HOME=/usr/java/default;
+      export HADOOP_MAPRED_LOG_DIR=/var/log/mapred;
+      export HADOOP_MAPRED_PID_DIR=/var/run/mapred;
+  notify:
+  - restart mapred-hs  
+
+- name: Setup mapred-site.xml
+  template:
+    src: "mapred-site.xml.j2"
+    dest: "/opt/hadoop-{{ hadoop_version }}/etc/hadoop/mapred-site.xml"
+    owner: mapred
+    group: hadoop
+    mode: 0644
+    backup: yes
+  notify:
+  - restart yarn-rm  
+  - restart yarn-nm
+  - restart mapred-hs
+  
+- name: Create mapred-hs (Mapreduce HistoryServer) service
+  template:
+    src: "mapred-hs.service.j2"
+    dest: "/usr/lib/systemd/system/mapred-hs.service"
+    owner: root
+    group: root
+    mode: 0644
+    backup: no
+  when: ansible_nodename in groups['mapred_hs']
+  notify:
+  - reload service file
+  - restart mapred-hs  
+
+- name: Create /user/history HDFS folder
+  hdfs_file: hdfs_path=/user/history owner=mapred group=hadoop mode=1777 state=directory 
+  when: hostvars[groups['hadoop_clients'][0]]['ansible_nodename']  == ansible_nodename
+
+        
+# ----- service setup        
+
+- meta: flush_handlers
+
+   
+- name: Enable mapred-hs services
+  service:
+    name: mapred-hs
+    enabled: yes 
+    state: started
+  when: ansible_nodename in groups['mapred_hs']
+    
+             
