@@ -1,0 +1,25 @@
+
+
+confluent.logs.dir={{confluent_log_dir}}
+
+log4j.rootLogger=INFO, confluentAppender
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c:%L)%n
+
+log4j.appender.confluentAppender=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.confluentAppender.DatePattern='.'yyyy-MM-dd-HH
+log4j.appender.confluentAppender.File=${confluent.logs.dir}/schema-registry.log
+log4j.appender.confluentAppender.layout=org.apache.log4j.PatternLayout
+log4j.appender.confluentAppender.layout.ConversionPattern=[%d] %p %m (%c)%n
+
+log4j.logger.kafka=ERROR, stdout
+log4j.logger.org.apache.zookeeper=ERROR, stdout
+log4j.logger.org.apache.kafka=ERROR, stdout
+log4j.logger.org.I0Itec.zkclient=ERROR, stdout
+#log4j.logger.kafka.consumer.ZookeeperConsumerConnector=INFO, stdout
+log4j.additivity.kafka.server=false
+log4j.additivity.kafka.consumer.ZookeeperConsumerConnector=false
+
+

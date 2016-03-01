@@ -1,0 +1,15 @@
+[Unit]
+Description=Confluent schema registry
+
+[Service]
+User={{schema_registry_user}}
+Group={{confluent_group}}
+SyslogIdentifier={{confluent_group}}
+TimeoutSec=15
+Restart=always
+ExecStart=/bin/bash /usr/bin/schema-registry-start /etc/schema-registry/schema-registry.properties
+ExecStop=/bin/bash /usr/bin/schema-registry-stop
+
+[Install]
+WantedBy=multi-user.target
+

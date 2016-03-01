@@ -105,7 +105,7 @@
 
 - meta: flush_handlers
 
-- name: Enable yarn-rm services
+- name: Ensure yarn-rm is started and enabled
   service:
     name: yarn-rm
     enabled: yes 
@@ -113,7 +113,7 @@
   when: ansible_nodename in groups['yarn_rm']
       
    
-- name: Enable yarn-nm services
+- name: Ensure yarn-rm is started and enabled
   service:
     name: yarn-nm
     enabled: yes 
