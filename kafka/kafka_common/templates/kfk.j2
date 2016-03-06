@@ -1,0 +1,44 @@
+#!/bin/bash
+# kafka cli helper
+#
+
+set -e
+set +x
+
+
+MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function usage {
+	echo "kfk list                 - List topics"
+	echo "kfk listen <topicName>   - Display all new message"
+	echo "kfk read <topicName>     - Display all messages from beginning and listen for next"
+}
+
+CMD=$1
+TOPIC=$2
+
+
+ZK={% for host in groups['zookeepers'] %}{% if not loop.first %},{% endif %}{{  hostvars[host]['ansible_fqdn'] }}:2181{% endfor %}
+
+case $CMD in
+	list)
+		/usr/bin/kafka-topics.sh --zookeeper $ZK --list
+	;;
+	listen)
+		if [ "x$TOPIC" == "x" ]; then
+			usage
+			exit 1
+		fi
+		/usr/bin/kafka-console-consumer.sh  --zookeeper $ZK --topic $TOPIC 
+	;;
+	read)
+		if [ "x$TOPIC" == "x" ]; then
+			usage
+			exit 1
+		fi
+		/usr/bin/kafka-console-consumer.sh  --zookeeper $ZK --topic $TOPIC --from-beginning 
+	;;
+	*)
+		usage;
+	;;
+esac

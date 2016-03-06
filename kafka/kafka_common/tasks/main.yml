@@ -45,37 +45,8 @@
 - name: Copy kafka jars and scripts in place
   script: setup.sh {{ kafka_tgz_url }} {{ kafka_version }} creates=/usr/share/java/kafka/kafka_{{ kafka_version }}.jar
       
-
- 
-- name: Setup kafka broker config
-  template:
-    src: "{{ item }}.j2"
-    dest: "/etc/kafka/{{ item }}"
-    owner: root
-    group: root
-    mode: 0644
-    backup: yes
-  notify:
-  - restart kafka
-  with_items:
-  - broker.properties
-  - broker-log4j.properties
-
-
-- name: Setup kafka client config
-  template:
-    src: "{{ item }}.j2"
-    dest: "/etc/kafka/{{ item }}"
-    owner: root
-    group: root
-    mode: 0644
-    backup: yes
-  with_items:
-  - consumer.properties
-  - producer.properties
-  - tools-log4j.properties
-  
-    
+      
+        
 - name: Setup kafka commands
   template:
     src: "{{ item }}.j2"
@@ -84,31 +55,7 @@
     group: root
     mode: 0755
     backup: yes
-  notify:
-  - restart kafka
   with_items:
   - kafka-run-class.sh
-  - kafka-server-start.sh
+  - kfk
  
-- name: Create kafka service
-  template:
-    src: kafka.service.j2
-    dest: /usr/lib/systemd/system/kafka.service
-    owner: root
-    group: root
-    mode: 0644
-    backup: no
-  notify:
-  - restart kafka
-  - reload service file      
-   
-- meta: flush_handlers
-   
-- name: Enable kafka services
-  service:
-    name: kafka
-    enabled: yes
-    state: started        
-    
-    
-    

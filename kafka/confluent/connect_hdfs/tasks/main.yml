@@ -13,16 +13,20 @@
 # See the License for the specific language governing permissions and
 #limitations under the License.
 #
+ 
 
-
-    
-- name: reload service file
-  command: "systemctl daemon-reload"
+- name: Intall connect-hdfs package
+  yum: pkg=confluent-kafka-connect-hdfs state=present
   
-
-- name: restart kafka
-  service: 
-    name: kafka
-    state: restarted
-    
-    
+- name: Add classpath for kafka-connect
+  blockinfile:
+    dest: /etc/kafka/connect-setenv.sh
+    create: yes
+    owner: root
+    group: root
+    mode: 0755
+    marker: "# {mark} Ansible managed block (connect-hdfs)"
+    content: |
+      export CLASSPATH=$CLASSPATH:/usr/share/java/kafka-connect-hdfs/*
+  notify: restart kafka-connect
+  

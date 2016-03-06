@@ -1,0 +1,5 @@
+
+#kafka_version: "2.11-0.9.0.1"
+
+#kafka_tgz_url: "{{ some_repository_url }}/kafka_{{ kafka_version }}.tgz"
+

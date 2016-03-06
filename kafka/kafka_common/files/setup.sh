@@ -30,9 +30,10 @@ cp kafka_${KAFKA_VERSION}/bin/kafka-*.sh /usr/bin
 chown root:root /usr/bin/kafka-*.sh
 chmod 0755 /usr/bin/kafka-*.sh
 
-cp kafka_${KAFKA_VERSION}/bin/connect-*.sh /usr/bin
-chown root:root /usr/bin/connect-*.sh
-chmod 0755 /usr/bin/connect-*.sh
+# Will be set in place by ansible
+#cp kafka_${KAFKA_VERSION}/bin/connect-*.sh /usr/bin
+#chown root:root /usr/bin/connect-*.sh
+#chmod 0755 /usr/bin/connect-*.sh
 
 
 cd ..

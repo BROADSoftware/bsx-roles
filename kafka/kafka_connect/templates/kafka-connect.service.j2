@@ -1,0 +1,14 @@
+[Unit]
+Description=Kafka connect worker service
+
+[Service]
+User=kafka
+Group=kafka
+SyslogIdentifier=kafka-connect
+TimeoutSec=15
+Restart=always
+ExecStart=/bin/bash /usr/bin/kafka-connect-start.sh /etc/kafka/connect.properties
+
+[Install]
+WantedBy=multi-user.target
+

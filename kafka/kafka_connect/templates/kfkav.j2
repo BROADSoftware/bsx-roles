@@ -1,0 +1,44 @@
+#!/bin/bash
+# kafka cli helper
+#
+
+set -e
+set +x
+
+
+MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function usage {
+	echo "kfkav list                 - List topics"
+	echo "kfkav listen <topicName>   - Display all new message"
+	echo "kfkav read <topicName>     - Display all messages from beginning and listen for next"
+}
+
+CMD=$1
+TOPIC=$2
+
+
+ZK={% for host in groups['zookeepers'] %}{% if not loop.first %},{% endif %}{{  hostvars[host]['ansible_fqdn'] }}:2181{% endfor %}
+
+case $CMD in
+	list)
+		/usr/bin/kafka-topics.sh --zookeeper $ZK --list
+	;;
+	listen)
+		if [ "x$TOPIC" == "x" ]; then
+			usage
+			exit 1
+		fi
+		/usr/bin/kafka-avro-console-consumer  --zookeeper $ZK --topic $TOPIC --property schema.registry.url=http://{{hostvars[groups['confluent_schema_registry'][0]]['ansible_fqdn']}}:8081
+	;;
+	read)
+		if [ "x$TOPIC" == "x" ]; then
+			usage
+			exit 1
+		fi
+		/usr/bin/kafka-avro-console-consumer  --zookeeper $ZK --topic $TOPIC --from-beginning --property schema.registry.url=http://{{hostvars[groups['confluent_schema_registry'][0]]['ansible_fqdn']}}:8081
+	;;
+	*)
+		usage;
+	;;
+esac

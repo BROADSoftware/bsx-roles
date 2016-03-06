@@ -1,0 +1,4 @@
+
+# Is kafka connect configured with confluent
+kafka_connect_with_confluent: False
+
