@@ -1,4 +1,4 @@
-# bsx_roles
+# bsx-roles
 
 A set of ansible rules aimed to install stuff from NoSQL/Hadoop world.
 
