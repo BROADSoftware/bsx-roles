@@ -1,0 +1,87 @@
+
+# logtrawler_version: "0.5.0"
+
+# logtrawler_server_rpm_url: "http://my.repo.mycompany.com/misc/logtrawler-{{ logtrawler_version }}-1.noarch.rpm"
+
+# --------------------------------------------------------------
+# ------------- logtrawler configuration -----------------------
+# --------------------------------------------------------------
+
+#
+# Explicit JAVA_HOME.
+# If unset, will be looked up at run time
+#
+#logtrawler_java_home: 
+
+#
+# The list of folder(s) to monitor
+#
+logtrawler_folders_to_monitor:
+  - /var/log
+ 
+# 
+# The list of vald mime types.
+#  
+logtrawler_valid_mime_types:
+  - text/plain
+  - text/x-log
+  - application/octet-stream
+  
+#
+# The list of path to exclude. Each list item is a Regex
+# 
+# Example:
+#  logtrawler_paths_to_exclude:
+#    - "/var/log/nagios/.*"
+#
+# May be empty
+#
+logtrawler_paths_to_exclude:
+
+
+#
+# Status serveur configuration
+#
+logtrawler_status_web_active: true
+
+#
+# Status web server listening address
+#
+logtrawler_status_web_addr: 0.0.0.0
+logtrawler_status_web_port: 20147
+
+#
+# List of subnet allowed to access this status server.
+#
+logtrawler_status_web_from: 
+  - "127.0.0.1/32"
+#
+# To allow from everywhere: 
+#  logtrawler_status_web_from
+#    - '*'
+
+#
+# List of output data stream targets
+#
+# exemples:
+#  logtrawler_output_targets
+#    - "http://a.server.com:9200/log1/logs" # Send all collected logs to a remote server (Port number may let think its an Elasticsearch one.
+#    - "file:///tmp/logtrawler.out"          # Send all collected logs to a local file. Use this to test/debug only, as this file may become huge in a short time.
+#
+# At least one must be defined
+#
+# WARNING: Do not send to a file in the monitored space, or you will ends up in infinite loop !!
+#
+logtrawler_output_targets:
+  - "file:///tmp/logtrawler.out"
+     
+#
+#
+# Allow batching of output in JSON arrays (Not compatible with Elastic search).
+# 0 to disable
+#
+logtrawler_out_batch_size: 0 
+ 
+ 
+ 
+ 

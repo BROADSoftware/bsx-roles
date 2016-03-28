@@ -1,0 +1,5 @@
+#!/bin/bash
+echo 'Launching logReader'
+CD=`dirname $0`
+CP={{log4j_jar}}
+java -cp $CP org.apache.log4j.net.SimpleSocketServer 6000 $CD/log4jReader.properties

@@ -1,0 +1,32 @@
+
+# Use stat for reducing execution time in case of already installed.
+- stat: path=/opt/logtrawler/logtrawler.jar
+  register: logtrawler
+
+- name: Install logtrawler 
+  yum:
+    name: "{{ logtrawler_server_rpm_url }}"
+    state: present
+  when: not logtrawler.stat.exists
+    
+    
+- name: Setup logtrawler config
+  template:
+    src: setenv.sh.j2
+    dest: /etc/logtrawler/setenv.sh
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+  - restart logtrawler
+  
+  
+- meta: flush_handlers
+   
+
+- name: Enable logtrawler services
+  service:
+    name: logtrawler
+    enabled: yes    
+    state: started        

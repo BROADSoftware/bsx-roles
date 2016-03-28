@@ -1,0 +1,61 @@
+# ========================================
+#  WARNING: Ansible generated. DO NOT EDIT
+# ========================================
+
+{% if logtrawler_java_home is defined and not (logtrawler_java_home is none) %}
+# Set JAVA_HOME. Must be at least 1.7.
+JAVA_HOME={{ logtrawler_java_home }}
+{% else %}
+# JAVA_HOME not set. Will try to lookup a correct version at run time
+{% endif %}
+
+
+# Set folder(s) to monitor
+{% for folder in logtrawler_folders_to_monitor %}
+OPTS="$OPTS -f {{ folder }}"
+{% endfor %}
+
+# Overwrite the default mime type for log files.
+{% for mt in logtrawler_valid_mime_types %}
+OPTS="$OPTS -m {{ mt }}"
+{% endfor %}
+
+{% if logtrawler_paths_to_exclude is sequence %}
+# Add some exclusion rules
+{% for regex in logtrawler_paths_to_exclude %}
+OPTS="$OPTS -x \"{{ regex }}\""
+{% endfor %}
+{% else %}
+# No path to exclude (i.e OPTS="$OPTS -x \"/var/log/nagios/spool/.*\"")
+{% endif %}
+
+# Set hostname, in fqdn form
+OPTS="$OPTS -h $(hostname -f)"
+
+{% if logtrawler_status_web_active %}
+# Status web server listening address:port.
+OPTS="$OPTS -e {{ logtrawler_status_web_addr }}:{{ logtrawler_status_web_port }}"
+{% if logtrawler_status_web_from is sequence %}
+# Allow access to admin interface from some network(s)
+{% for addr in logtrawler_status_web_from %}
+OPTS="$OPTS -a {{ addr }}"
+{% endfor %}
+{% endif %}
+{% else %}
+# Status web served disabled
+{% endif %}
+
+# Output target stream (At least one such option should be set)
+{% for target in logtrawler_output_targets %}
+OPTS="$OPTS -o {{ target }}"
+{% endfor %}
+
+{% if logtrawler_out_batch_size is defined and not (logtrawler_out_batch_size is none) %}
+# Allow batching of output in JSON arrays (Not compatible with Elastic search). 0 to disable
+OPTS="$OPTS -b {{ logtrawler_out_batch_size }}"
+{% else %}
+# No output batching. One request per line
+{% endif %}
+
+
+

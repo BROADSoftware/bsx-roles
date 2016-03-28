@@ -1,0 +1,14 @@
+log4j.debug=false
+
+log4j.rootLogger=debug, CONSOLE
+
+log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+#log4j.appender.CONSOLE.layout.ConversionPattern=%d{ABSOLUTE} %-5p %c - %m%n
+#log4j.appender.CONSOLE.layout.ConversionPattern=%d %-5p [%t] (%F:%L) %c - %m%n
+#log4j.appender.CONSOLE.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{1}:%L - %m%n
+log4j.appender.CONSOLE.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{10}:%L - %m%n
+
+
+log4j.logger.org.apache.log4j.net.SimpleSocketServer=warn
+
