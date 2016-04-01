@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
 encoding//hadoop/hdfs_modules/library/hdfs_cmd.py=utf-8
 encoding//hadoop/hdfs_modules/library/hdfs_file.py=utf-8
+encoding//hadoop/hdfs_modules/library/hdfs_info.py=utf-8
 encoding/<project>=UTF-8

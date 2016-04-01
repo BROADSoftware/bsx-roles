@@ -158,8 +158,22 @@ module = None
 
 class WebHDFS:
     def __init__(self, endpoint, auth):
+        if auth != "" and not auth.endswith("&"):
+            auth = auth + "&"
         self.endpoint = endpoint
         self.auth = auth
+            
+    def test(self):
+        url = "http://{0}/webhdfs/v1/?{1}op=GETFILESTATUS".format(self.endpoint, self.auth)
+        try:
+            h = httplib2.Http()
+            resp, _ = h.request(url, "GET")
+            if resp.status == 200:
+                return (True, "")
+            else: 
+                return (False, "{0}  =>  Response code: {1}".format(url, resp.status))
+        except Exception as e:
+            return (False, "{0}  =>  Response code: {1}".format(url, e.strerror))
         
     class FileStatus:
         owner = None
@@ -168,7 +182,7 @@ class WebHDFS:
         permission = None
         def __str__(self):
             return "FileStatus => owner: '{0}', group: '{1}',  type:'{2}', permission:'{3}'".format(self.owner, self.group, self.type, self.permission)
-        
+
     def getFileStatus(self, path):
         url = "http://{0}/webhdfs/v1{1}?{2}op=GETFILESTATUS".format(self.endpoint, path, self.auth)
         h = httplib2.Http()
@@ -273,6 +287,38 @@ def checkCompletion(webhdfs, p):
                 error("Was unable to switch permission to {0}. Still {1}", p.mode, fs.permission) 
                 
                 
+def lookupWebHdfs(p):                
+    if p.webhdfsEndpoint == None:
+        candidates = []
+        hspath = os.path.join(p.hadoopConfDir, "hdfs-site.xml")
+        NN_HTTP_TOKEN1 = "dfs.namenode.http-address"
+        NN_HTTP_TOKEN2 = "dfs.http.address"  # Deprecated
+        if os.path.isfile(hspath):
+            doc = minidom.parse(hspath)
+            properties = doc.getElementsByTagName("property")
+            for prop in properties :
+                name = prop.getElementsByTagName("name")[0].childNodes[0].data
+                if name.startswith(NN_HTTP_TOKEN1) or name.startswith(NN_HTTP_TOKEN2):
+                    candidates.append(prop.getElementsByTagName("value")[0].childNodes[0].data)
+            if not candidates:
+                error("Unable to find {0}* or {1}* in {2}. Provide explicit 'webhdfs_endpoint'", NN_HTTP_TOKEN1, NN_HTTP_TOKEN2, hspath)
+            errors = []
+            for endpoint in candidates:
+                webHDFS= WebHDFS(endpoint, p.auth)
+                (x, err) = webHDFS.test()
+                if x:
+                    p.webhdfsEndpoint = webHDFS.endpoint
+                    return webHDFS
+                else:
+                    errors.append("\n" + err)
+            error("Unable to find a valid 'webhdfs_endpoint' in hdfs-site.xml:" + err)
+        else:
+            error("Unable to find file {0}. Provide 'webhdfs_endpoint' or 'hadoop_conf_dir' parameter", hspath)
+    else:
+        return WebHDFS(p.webhdfsEndpoint, p.auth)
+    
+                
+                
 def main():
     
     global module
@@ -340,28 +386,8 @@ def main():
 
     if not p.path.startswith("/"):
         error("Path '{0}' is not absolute. Absolute path is required!", p.path)
-        
-    if p.webhdfsEndpoint == None:
-        hspath = os.path.join(p.hadoopConfDir, "hdfs-site.xml")
-        namenodeHttpToken1 = "dfs.namenode.http-address"
-        namenodeHttpToken2 = "dfs.http.address"  # Deprecated
-        if os.path.isfile(hspath):
-            doc = minidom.parse(hspath)
-            properties = doc.getElementsByTagName("property")
-            for prop in properties :
-                name = prop.getElementsByTagName("name")[0].childNodes[0].data
-                if name == namenodeHttpToken1 or name == namenodeHttpToken2:
-                    p.webhdfsEndpoint = prop.getElementsByTagName("value")[0].childNodes[0].data
-                    break
-            if p.webhdfsEndpoint == None:
-                error("Unable to find {0} or {1} in {2}. Provide explicit 'webhdfs_endpoint'", namenodeHttpToken1, namenodeHttpToken2, hspath)
-        else:
-            error("Unable to find file {0}. Provide 'webhdfs_endpoint' or 'hadoop_conf_dir' parameter", hspath)
-        
-    if p.auth != "" and not p.auth.endswith("&"):
-        p.auth = p.auth + "&"
-        
-    webhdfs = WebHDFS(p.webhdfsEndpoint, p.auth)
+
+    webhdfs = lookupWebHdfs(p)
     
     fileStatus = webhdfs.getFileStatus(p.path)
     if fileStatus == None:
