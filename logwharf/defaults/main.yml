@@ -1,0 +1,72 @@
+---
+# Copyright (C) 2016 BROADSoftware
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#limitations under the License.
+#
+
+
+# ----------------------------------- Mandatory
+# logwharf_version: "0.5.0"
+
+# logwharf_rpm_url: "http://my.repo.mycompany.com/misc/logwharf-{{ logwharf_version }}-1.noarch.rpm"
+
+# If this is not defined, we lookup an ansible group named 'kafka_brokers'
+# logwharf_kafkaBrokerBootstrap: 
+# - server1.domain.com:9092
+# - server2.domain.com:9092
+
+
+# --------------------------------------------------------------
+# ------------- logwharf configuration -----------------------
+# --------------------------------------------------------------
+
+# --------------------------------- Mandatory parameters
+# If not defined, will default to ansible 'inventory_hostname_short'
+# logwharf_gateId: "gate1"
+
+# This one MUST BE defined explicitly
+# logwharf_targetTopic: "wharf1"
+
+# --------------------------------- Optionnal ones.
+# (If unset, will take product default values).
+#
+# Explicit JAVA_HOME.
+# If unset, will be looked up at run time
+#
+# logwharf_java_home: 
+
+# logwharf_keyLevel: 2
+# logwharf_endpoint: 0.0.0.0:7070
+# logwharf_allowedSources
+# - 10.0.0.0/8
+# - 172.16.0.0/12
+# - 192.168.0.0/16
+# logwharf_maxMessageSize: 1000000
+# logwharf_readStep: 4096
+# logwharf_acks: 1
+# logwharf_batchSize: 16385
+# logwharf_clientId: "gate1"
+# logwharf_compression: none
+# logwharf_linger: 0
+# logwharf_maxBlock: 30000
+
+
+
+
+
+
+
+
+
+
+

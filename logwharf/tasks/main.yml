@@ -15,33 +15,33 @@
 #
 
 # Use stat for reducing execution time in case of already installed.
-- stat: path=/opt/logtrawler/logtrawler.jar
-  register: logtrawler
+- stat: path=/opt/logwharf/logwharf.jar
+  register: logwharf
 
-- name: Install logtrawler 
+- name: Install logwharf 
   yum:
-    name: "{{ logtrawler_rpm_url }}"
+    name: "{{ logwharf_rpm_url }}"
     state: present
-  when: not logtrawler.stat.exists
+  when: not logwharf.stat.exists
     
     
-- name: Setup logtrawler config
+- name: Setup logwharf config
   template:
     src: setenv.sh.j2
-    dest: /etc/logtrawler/setenv.sh
+    dest: /etc/logwharf/setenv.sh
     owner: root
     group: root
     mode: 0644
     backup: yes
   notify:
-  - restart logtrawler
+  - restart logwharf
   
   
 - meta: flush_handlers
    
 
-- name: Enable logtrawler services
+- name: Enable logwharf services
   service:
-    name: logtrawler
+    name: logwharf
     enabled: yes    
     state: started        

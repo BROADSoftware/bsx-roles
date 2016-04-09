@@ -1,0 +1,7 @@
+
+- name: restart logwharf
+  service: 
+    name: logwharf
+    state: restarted
+    
+    

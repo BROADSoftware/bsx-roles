@@ -1,0 +1,138 @@
+# ========================================
+#  WARNING: Ansible generated. DO NOT EDIT
+# ========================================
+
+# Set JAVA_HOME. Must be at least 1.7.
+# If not set, will try to lookup a correct version.
+# JAVA_HOME=/some/place/where/to/find/java
+{% if logwharf_java_home is defined and not (logwharf_java_home is none)  %}
+JAVA_HOME={{logwharf_java_home}}
+{% endif %}
+
+
+# Set the log configuration file
+JOPTS="$JOPTS -Dlog4j.configuration=file:/etc/logwharf/log4j.xml"
+
+# ---------------------------------------------------- Mandatory parameters
+
+# Set kafka bootstrap server(s)
+# Define the kafka cluster to store incoming message
+{% if logwharf_kafkaBrokersBootstrap is defined %}
+OPTS="$OPTS --kafka {{logwharf_kafkaBrokersBootstrap}}"
+{%else%}
+OPTS="$OPTS --kafka {% for host in groups['kafka_brokers'] %}{% if not loop.first %},{% endif %}{{  hostvars[host]['ansible_fqdn'] }}:9092{% endfor %}"
+{%endif%}
+
+
+# Set gate ID (Must be globally unique)
+# This will be used to tag every incoming message, as part of extTs (Extended Timestamp)
+{% if logwharf_gateId is defined %}
+OPTS="$OPTS --gateId {{logwharf_gateId}}"
+{% else %}
+OPTS="$OPTS --gateId {{inventory_hostname_short}}"
+{% endif %}
+
+
+# Set target topic
+OPTS="$OPTS --topic {{logwharf_targetTopic}}"
+
+# ------------------------------------------------------ Optional parameters
+# Uncomment to activate. Default value are provided as sample.
+
+
+# Set keyLevel
+# 0, 1, 2 or 3. Define the richness of information included in the key. From the received HTTP request.
+# 0: No key at all
+# 1: extTs (Timestamp + gateId + counter) + remote (sender) IP address
+# 2: 1 + verb (PUT,POST,GET...) + characterEncoding + contentType + pathInfo + contentLength
+# 3: 2 + protocol + scheme + serverName + serverPort + header + query parameters.
+#
+{% if logwharf_keyLevel is defined %}
+OPTS="$OPTS --keyLevel {{logwharf_keyLevel}}"
+{% else %}
+# OPTS="$OPTS --keyLevel 2"
+{% endif %}
+
+# Set endoint. Listening address for logwharf server.
+# Allow to bind on a specific interface, or on all (0.0.0.0).
+# Provide also listening port.
+#
+{% if logwharf_endpoint is defined %}
+OPTS="$OPTS --endpoint {{logwharf_endpoint}}"
+{% else %}
+# OPTS="$OPTS --endpoint 0.0.0.0:7070"
+{% endif %}
+
+# Allow to restrict range of IP allowed to send message to logwharf.
+# Default is to allow everything: 
+{% if logwharf_allowedSources is defined %}
+OPTS="$OPTS --allowedSources{% for src in logwharf_allowedSources %} {{ src }}{% endfor %}"
+{% else %}
+# OPTS="$OPTS --allowedSources 0.0.0.0/0"
+{% endif %}
+
+
+# Allow to define a limit to the size of each message pushed to kafka.
+# If an HTTP content exceed this value, the message is trunctaed and a "truncated": true is inserted in the key if --leyLevel > 9
+# This value should not exceed the value configured for the topic (max.message.bytes) or the broker (message.max.bytes)
+{% if logwharf_maxMessageSize is defined %}
+OPTS="$OPTS --maxMessageSize {{logwharf_maxMessageSize}}"
+{% else %}
+# OPTS="$OPTS --maxMessageSize 1000000"
+{% endif %}
+
+# The size of internal buffer to receive a part of message.
+# ou probably don't need to change this.
+{% if logwharf_readStep is defined %}
+OPTS="$OPTS --readStep {{logwharf_readStep}}"
+{% else %}
+# OPTS="$OPTS --readStep 4096"
+{% endif %}
+
+
+# Refer to Kafka Producer config for acks parameter
+{% if logwharf_acks is defined %}
+OPTS="$OPTS --acks {{logwharf_acks}}"
+{% else %}
+# OPTS="$OPTS --acks 1"
+{% endif %}
+
+# Refer to Kafka Producer config for batch.size parameter
+{% if logwharf_batchSize is defined %}
+OPTS="$OPTS --batchSize {{logwharf_batchSize}}"
+{% else %}
+# OPTS="$OPTS --batchSize 16385"
+{% endif %}
+
+# Refer to Kafka Producer config for client.id parameter. If not specified, default to --gateId value
+{% if logwharf_clientId is defined %}
+OPTS="$OPTS --clientId {{logwharf_clientId}}"
+{% else %}
+# OPTS="$OPTS --clientId wharf1"
+{% endif %}
+
+# Refer to Kafka Producer config for compression.type parameter
+{% if logwharf_compression is defined %}
+OPTS="$OPTS --compression {{logwharf_compression}}"
+{% else %}
+# OPTS="$OPTS --compression none"
+{% endif %}
+
+# Refer to Kafka Producer config for linger.ms parameter
+{% if logwharf_linger is defined %}
+OPTS="$OPTS --linger {{logwharf_linger}}"
+{% else %}
+# OPTS="$OPTS --linger 0"
+{% endif %}
+
+# Refer to Kafka Producer config for max.block.ms parameter
+{% if logwharf_maxBlock is defined %}
+OPTS="$OPTS --maxBlock {{logwharf_maxBlock}}"
+{% else %}
+# OPTS="$OPTS --maxBlock 30000"
+{% endif %}
+
+
+
+
+
