@@ -49,9 +49,10 @@ logtrawler_valid_mime_types:
 #  logtrawler_paths_to_exclude:
 #    - "/var/log/nagios/.*"
 #
-# May be empty
+# Typically, contains at least our own log folder, to avoid risk of infinite loop
 #
 logtrawler_paths_to_exclude:
+  - "/var/log/logtrawler/.*"
 
 
 #

@@ -10,6 +10,10 @@ JAVA_HOME={{ logtrawler_java_home }}
 {% endif %}
 
 
+# Set the log configuration file
+JOPTS="$JOPTS -Dlog4j.configuration=file:/etc/logtrawler/log4j.xml"
+
+
 # Set folder(s) to monitor
 {% for folder in logtrawler_folders_to_monitor %}
 OPTS="$OPTS -f {{ folder }}"
