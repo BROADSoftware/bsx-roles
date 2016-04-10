@@ -39,7 +39,6 @@
     - /var/log/kafka
     - /usr/share/java/kafka
     - /etc/kafka
-    - "{{ kafka_log_dir }}"
 
  
 - name: Copy kafka jars and scripts in place
