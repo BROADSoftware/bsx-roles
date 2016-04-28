@@ -24,9 +24,25 @@
     state: present
   when: not kafka_manager.stat.exists
   
-- name: Configure kafka-manager
+- name: Configure kafka-manager application.conf
   template:
     dest: /usr/share/kafka-manager/conf/application.conf
     src: application.conf.j2
   notify:
   - restart kafka-manager
+  
+- name: Configure kafka-manager /etc/default
+  template:
+    dest: /etc/default/kafka-manager
+    src: default.j2
+  notify:
+  - restart kafka-manager
+  
+# In case of update, kafka-manager user may be deleted and recreated with a different ID.
+# In such case, as log file remain undeleted, there may be a permission error  
+- stat: path=/var/log/kafka-manager/kafka-manager.log
+  register: kafka_manager_log
+- name: Ensure right owner:group on log file. (In case of update)
+  file: path=/var/log/kafka-manager/kafka-manager.log owner=kafka-manager group=kafka-manager state=file
+  when: kafka_manager_log.stat.exists
+  

@@ -1,0 +1,25 @@
+# ANSIBLE MANAGED
+
+# This file gets sourced before the actual bashscript
+# gets executed. You can use this file to provide
+# environment variables
+
+# Available replacements
+# ------------------------------------------------
+# Yahoo <yahoo@example.com>                   package author
+# A tool for managing Apache Kafka                    package description
+# kafka-manager                     startup script name
+# /usr/share/kafka-manager                    app directory
+# 0                  retries for startup
+# 60             retry timeout
+# kafka-manager                 normalized app name
+# kafka-manager              daemon user
+# -------------------------------------------------
+
+# Setting JAVA_OPTS
+# -----------------
+JAVA_OPTS="-Dpidfile.path=/var/run/kafka-manager/kafka-manager.pid -Dconfig.file=/etc/kafka-manager/application.conf -Dlogger.file=/etc/kafka-manager/logger.xml $JAVA_OPTS"
+
+# Setting PIDFILE
+# ---------------
+PIDFILE="/var/run/kafka-manager/kafka-manager.pid"
