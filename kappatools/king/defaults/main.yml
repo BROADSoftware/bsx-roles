@@ -1,0 +1,124 @@
+---
+# Copyright (C) 2016 BROADSoftware
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#limitations under the License.
+#
+
+
+# ----------------------------------- Mandatory
+# king_version: "0.6.2"
+
+# king_rpm_url: "http://my.repo.mycompany.com/misc/king-{{ king_version }}-1.noarch.rpm"
+
+
+# --------------------------------------------------------------
+# ------------- king configuration -----------------------
+# --------------------------------------------------------------
+
+# --------------------------------- Mandatory parameters
+
+# If this is not defined, we lookup an ansible group named 'kafka_brokers'
+# king_brokers: 
+# - server1.domain.com:9092
+# - server2.domain.com:9092
+
+# If not defined, will default to ansible 'inventory_hostname_short'
+# king_gateId: "gate1"
+
+# This one MUST BE defined explicitly
+# king_topic: "wharf1"
+
+# --------------------------------- Optionnal ones.
+# (If unset, will take product default values).
+#
+# Explicit JAVA_HOME.
+# If unset, will be looked up at run time
+#
+# king_java_home: 
+
+# Set keyLevel
+# 1, 2 or 3. Define the richness of information included in the key. From the received HTTP request.
+# 1: extTs (Timestamp + gateId + counter + partitionKey (= remote (sender))) IP address
+# 2: 1 + verb (PUT,POST,GET...) + characterEncoding + contentType + pathInfo + contentLength
+# 3: 2 + protocol + scheme + serverName + serverPort + header + query parameters.
+#
+# king_keyLevel: 2
+
+# Set endoint. Listening address for king server.
+# Allow to bind on a specific interface, or on all (0.0.0.0).
+# Provide also listening port.
+#
+# king_endpoint: 0.0.0.0:7070
+
+
+# Allow to restrict range of IP allowed to send message to king.
+# Default is to allow everything: 
+#
+# king_allowedNetworks
+# - 10.0.0.0/8
+# - 172.16.0.0/12
+# - 192.168.0.0/16
+
+
+# Refer to Kafka Producer config for client.id parameter. If not specified, default to --gateId value
+#
+# king_clientId: "client1"
+
+# Allow setting of some Kafka producer properties.
+# Refer to Kafka Producer config for a list if such properties
+#
+# king_properties: "acks=all,compression.type=gzip"
+
+# king check properties name against a list of valid ones.
+# This will allow to skip this test, for example, in case of added properties in a new Kafka API version.
+# Use only if you know what you are doing
+#
+# king_forceProperties: false
+
+# Optional: Set an endoint for a small admin server.
+# Allow to bind on a specific interface, or on all (0.0.0.0).
+# Provide also listening port.
+#
+# king_adminEndpoint: 0.0.0.0:7071
+
+# Allow to restrict range of IP allowed to access this admin server.
+# Default is to allow only from localhost: 
+#
+# king_adminAllowedNetworks:
+# - 127.0.0.1/32
+
+# Define the sampling period for throughput statistics evaluation.
+# May be modified through the REST admin interface
+#
+# king_samplingPeriod: 1000
+
+# Allow INFO level messages generation of throughput statistics, on sample period.
+# May be set/unset through the REST admin interface
+#
+# king_messon: false
+
+# Allow INFO level messages generation of every single message (received payload).
+# May be set/unset through the REST admin interface
+# Use with care, only when receiving low frequency text payload
+#
+# king_statson: false
+
+
+
+
+
+
+
+
+
+

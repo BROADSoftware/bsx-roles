@@ -1,0 +1,47 @@
+---
+# Copyright (C) 2016 BROADSoftware
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#limitations under the License.
+#
+
+# Use stat for reducing execution time in case of already installed.
+- stat: path=/opt/king/king.jar
+  register: king
+
+- name: Install king 
+  yum:
+    name: "{{ king_rpm_url }}"
+    state: present
+  when: not king.stat.exists
+    
+    
+- name: Setup king config
+  template:
+    src: setenv.sh.j2
+    dest: /etc/king/setenv.sh
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+  - restart king
+  
+  
+- meta: flush_handlers
+   
+
+- name: Enable king services
+  service:
+    name: king
+    enabled: yes    
+    state: started        

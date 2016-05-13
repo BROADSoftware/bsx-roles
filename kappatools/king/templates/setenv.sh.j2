@@ -1,0 +1,88 @@
+# ========================================
+#  WARNING: Ansible generated. DO NOT EDIT
+# ========================================
+
+# Set JAVA_HOME. Must be at least 1.7.
+# If not set, will try to lookup a correct version.
+# JAVA_HOME=/some/place/where/to/find/java
+{% if king_java_home is defined and not (king_java_home is none)  %}
+JAVA_HOME={{king_java_home}}
+{% endif %}
+
+
+# Set the log configuration file
+JOPTS="$JOPTS -Dlog4j.configuration=file:/etc/king/log4j.xml"
+
+# ---------------------------------------------------- Mandatory parameters
+
+# Set kafka bootstrap server(s)
+# Define the kafka cluster to store incoming message
+{% if king_brokers is defined %}
+OPTS="$OPTS --brokers {{king_brokers}}"
+{%else%}
+OPTS="$OPTS --brokers {% for host in groups['kafka_brokers'] %}{% if not loop.first %},{% endif %}{{  hostvars[host]['ansible_fqdn'] }}:9092{% endfor %}"
+{%endif%}
+
+
+# Set gate ID (Must be globally unique)
+# This will be used to tag every incoming message, as part of extTs (Extended Timestamp)
+{% if king_gateId is defined %}
+OPTS="$OPTS --gateId {{king_gateId}}"
+{% else %}
+OPTS="$OPTS --gateId {{inventory_hostname_short}}"
+{% endif %}
+
+
+# Set target topic
+OPTS="$OPTS --topic {{king_topic}}"
+
+# ------------------------------------------------------ Optional parameters
+# Uncomment to activate. Default value are provided as sample.
+
+
+{% if king_keyLevel is defined %}
+OPTS="$OPTS --keyLevel {{king_keyLevel}}"
+{% endif %}
+
+{% if king_endpoint is defined %}
+OPTS="$OPTS --endpoint {{king_endpoint}}"
+{% endif %}
+
+{% if king_allowedNetworks is defined %}
+OPTS="$OPTS --allowedNetworks {% for src in king_allowedNetworks %}{%if not loop.first%},{%endif%}{{ src }}{% endfor %}"
+{% endif %}
+
+
+{% if king_clientId is defined %}
+OPTS="$OPTS --clientId {{ king_clientId }}"
+{% endif %}
+
+{% if king_properties is defined %}
+# OPTS="$OPTS --properties '{{ king_properties }}'"
+{% endif %}
+
+
+{% if king_forceProperties is defined and king_forceProperties %}
+# OPTS="$OPTS --forceProperties"
+{% endif %}
+
+{% if king_adminEndpoint is defined %}
+OPTS="$OPTS --adminEndpoint {{king_adminEndpoint}}"
+{% endif %}
+
+{% if king_adminAllowedNetworks is defined %}
+OPTS="$OPTS --adminAllowedNetworks {% for src in king_adminAllowedNetworks %}{%if not loop.first%},{%endif%}{{ src }}{% endfor %}"
+{% endif %}
+
+{% if king_samplePeriod is defined %}
+OPTS="$OPTS --samplePeriod {{king_samplePeriod}}"
+{% endif %}
+
+{% if king_statson is defined and king_statson %}
+OPTS="$OPTS --statson"
+{% endif %}
+
+{% if king_messon is defined and king_messon %}
+OPTS="$OPTS --messon"
+{% endif %}
+

@@ -1,0 +1,7 @@
+
+- name: restart king
+  service: 
+    name: king
+    state: restarted
+    
+    
