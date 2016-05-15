@@ -1,0 +1,43 @@
+---
+# Copyright (C) 2016 BROADSoftware
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#limitations under the License.
+#
+
+
+
+# Use stat for reducing execution time in case of already installed.
+- stat: path=/opt/topicfactory/topicfactory.jar
+  register: topicfactory
+
+- name: Install topicfactory 
+  yum:
+    name: "{{ topicfactory_rpm_url }}"
+    state: present
+  when: not topicfactory.stat.exists
+    
+- name: Ensure layout data folder for {{topicfactory_layout.name}}
+  file: path=/var/opt/topicfactory owner=root group=root mode=0755 state=directory
+  
+- name: Produce layout file for {{topicfactory_layout.name}}
+  template:
+    src: layout.yml.j2
+    dest: /var/opt/topicfactory/layout-{{topicfactory_layout.name}}.yml
+    owner: root
+    group: root
+    mode: 0644  
+
+- name: Adjust topic(s) for {{topicfactory_layout.name}}
+  shell: topicfactory --inputFile /var/opt/topicfactory/layout-{{topicfactory_layout.name}}.yml --forceProperties {% if topicfactory_layout.destructive is defined and topicfactory_layout.destructive %}--destructive{%endif%}
+  register: topicfactory_result
+  changed_when: "topicfactory_result.stdout != 'No modification!'"

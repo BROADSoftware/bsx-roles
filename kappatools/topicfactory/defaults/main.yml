@@ -1,0 +1,5 @@
+
+
+# topicfactory_version: "0.2"
+
+# topicfactory_rpm_url: "http://my.repo.mycompany.com/misc/king-{{ topicfactory_version }}-1.noarch.rpm"

@@ -1,0 +1,21 @@
+---
+{% if topicfactory_layout.zookeeper is defined %}
+zookeeper: {{ topicfactory_layout.zookeeper }}
+{% else %}
+zookeeper: {% for host in groups['zookeepers'] %}{% if not loop.first %},{% endif %}{{  hostvars[host]['ansible_fqdn'] }}:2181{% endfor %}
+
+{%endif %}
+scope: {{ topicfactory_layout.scope }}
+topics:
+{% for topic in topicfactory_layout.topics %}
+  - name: {{ topic.name }}
+    replicationFactor: {{ topic.replicationFactor }}
+    partitionFactor: {{ topic.partitionFactor }}
+{% if topic.properties is defined %}
+    properties:
+{% for k, v in topic.properties.iteritems() %}
+      {{ k }}: {{ v }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+
