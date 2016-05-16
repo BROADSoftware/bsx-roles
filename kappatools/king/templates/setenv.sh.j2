@@ -19,8 +19,10 @@ JOPTS="$JOPTS -Dlog4j.configuration=file:/etc/king/log4j.xml"
 # Define the kafka cluster to store incoming message
 {% if king_brokers is defined %}
 OPTS="$OPTS --brokers {{king_brokers}}"
-{%else%}
+{% elif groups['kafka_brokers'] is defined %}
 OPTS="$OPTS --brokers {% for host in groups['kafka_brokers'] %}{% if not loop.first %},{% endif %}{{  hostvars[host]['ansible_fqdn'] }}:9092{% endfor %}"
+{% elif groups['brokers'] is defined %}
+OPTS="$OPTS --brokers {% for host in groups['brokers'] %}{% if not loop.first %},{% endif %}{{  hostvars[host]['ansible_fqdn'] }}:9092{% endfor %}"
 {%endif%}
 
 
