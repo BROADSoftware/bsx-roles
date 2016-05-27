@@ -1,0 +1,46 @@
+---
+
+# Install Docker on CentOS, using docker repository
+
+- name: Add overlay module on boot
+  copy: 
+    dest: /etc/modules-load.d/overlay.conf
+    content: overlay
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add overlay module right now
+  shell: modprobe overlay
+  changed_when: false
+ 
+- name: "Set docker repo"
+  template: 
+    src: "docker.repo.j2"
+    dest: /etc/yum.repos.d/docker.repo
+    group: root
+    owner: root
+    mode: 0644
+
+- name: Install docker engine
+  yum: name=docker-engine    
+    
+- name: Setup override folder   
+  file: path=/etc/systemd/system/docker.service.d state=directory owner=root group=root mode=0755
+ 
+- name: Setup docker config override
+  template: 
+    src: "docker.service.override.j2"
+    dest: /etc/systemd/system/docker.service.d/override.conf
+    group: root
+    owner: root
+    mode: 0644
+  
+
+- name: Enable docker services
+  service:
+    name: docker
+    enabled: yes
+    state: started          
+    
+    
