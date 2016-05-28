@@ -13,18 +13,7 @@
 # See the License for the specific language governing permissions and
 #limitations under the License.
 #
-# Install docker 
 
 
-- include: docker_host_centos.yml
-  when: ansible_os_family == 'RedHat' and ansible_distribution == 'CentOS'
-        
-        
-- name: Add some user(s) to docker group
-  user:
-    name: "{{ item }}"
-    groups: docker
-    append: yes
-  with_items:  docker_users | default([])
- 
-    
+# This value can be overriden to target a local repo
+yum_repo_mesophere_url: "http://repos.mesosphere.io/el/7/$basearch/"

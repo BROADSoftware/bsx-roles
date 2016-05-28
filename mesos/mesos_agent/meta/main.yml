@@ -1,0 +1,6 @@
+---
+
+dependencies:
+  - { role: mesos/mesos_repo }
+ 
+  

@@ -13,18 +13,29 @@
 # See the License for the specific language governing permissions and
 #limitations under the License.
 #
-# Install docker 
+
+# Install mesosphere repository on CentOS 7.2
 
 
-- include: docker_host_centos.yml
-  when: ansible_os_family == 'RedHat' and ansible_distribution == 'CentOS'
-        
-        
-- name: Add some user(s) to docker group
-  user:
-    name: "{{ item }}"
-    groups: docker
-    append: yes
-  with_items:  docker_users | default([])
- 
+#- name: Add mesos repository
+#  yum: name=http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
+
+
+- name: "Set mesosphere pgp key"
+  copy: 
+    src: "RPM-GPG-KEY-mesosphere"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-mesosphere"
+    group: root
+    owner: root
+    mode: 0644
+    
+    
+- name: "Set mesosphere repo"
+  template: 
+    src: "mesosphere.repo.j2"
+    dest: /etc/yum.repos.d/mesosphere.repo
+    group: root
+    owner: root
+    mode: 0644
+    
     

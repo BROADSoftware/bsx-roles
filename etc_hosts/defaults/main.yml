@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2016 BROADSoftware
+# Copyright (C) 2015 BROADSoftware
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,18 +13,6 @@
 # See the License for the specific language governing permissions and
 #limitations under the License.
 #
-# Install docker 
 
-
-- include: docker_host_centos.yml
-  when: ansible_os_family == 'RedHat' and ansible_distribution == 'CentOS'
-        
-        
-- name: Add some user(s) to docker group
-  user:
-    name: "{{ item }}"
-    groups: docker
-    append: yes
-  with_items:  docker_users | default([])
- 
-    
+# Allow to select an IP in the ansible_all_ipv4_addresses[] of ansible_facts
+#ansible_ipv4_idx: 0
