@@ -14,14 +14,30 @@
 #limitations under the License.
 #
 
+# Must be defined par installation
+# cassandra_version: 3.5
+# cassandra_cluster_name: "Default"
+
 
 # This value can be overriden to target a local repo
-yum_repo_cassandra_url: "http://rpm.datastax.com/datastax-ddc/3.5"
+yum_repo_cassandra_url: "http://rpm.datastax.com/datastax-ddc/{{cassandra_version}}"
 
 # In simple topology, all nodes can be seed
 cassandra_seeds: "{{groups['cassandra_nodes']}}"
 
-# Must be defined
-# cassandra_cluster_name: "Default"
  
- 
+
+# Directories where Cassandra should store data on disk.  Cassandra
+# will spread data evenly across them, subject to the granularity of
+# the configured compaction strategy.
+# If not set, the default directory is $CASSANDRA_HOME/data/data.
+cassandra_data_file_directories:
+- /var/lib/cassandra/data
+
+# commit log.  when running on magnetic HDD, this should be a
+# separate spindle than the data directories.
+# If not set, the default directory is $CASSANDRA_HOME/data/commitlog.
+cassandra_commitlog_directory: /var/lib/cassandra/commitlog 
+
+
+
