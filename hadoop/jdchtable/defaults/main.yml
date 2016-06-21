@@ -15,12 +15,8 @@
 #
 
 
-
-
-#jdchtable_version: cdh552-0.1.0
-#jdchtable_version: hdp24-0.1.0
-
-#jdchtable_rpm_url: https://git2.broadsoftware.com/jenkins/job/jdchtable/lastSuccessfulBuild/artifact/build/distributions/jdchtable_{{jdchtable_version}}-1.noarch.rpm
+#jdchtable_rpm_url: https://github.com/BROADSoftware/jdchtable/releases/download/v0.1.0/jdchtable_cdh552-0.1.0-1.noarch.rpm
+#jdchtable_rpm_url: https://github.com/BROADSoftware/jdchtable/releases/download/v0.1.0/jdchtable_hdp24-0.1.0-1.noarch.rpm
 
 #jdchtable_znodeParent: "/hbase"
 #jdchtable_znodeParent: "/hbase-unsecure"
