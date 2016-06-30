@@ -19,6 +19,8 @@
 #http://lists.freedesktop.org/archives/systemd-devel/2011-November/003934.html
 #https://openvpn.net/index.php/open-source/documentation/miscellaneous/76-ethernet-bridging.html
 
+#- debug: var=openvpn_server
+
 - fail: msg="'openvpn_server.mode' must be defined and set to 'bridge' or 'routing'"
   when: openvpn_server.mode is not defined or (openvpn_server.mode != 'routing' and openvpn_server.mode != 'bridge')
 

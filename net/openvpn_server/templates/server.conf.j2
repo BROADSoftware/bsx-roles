@@ -11,6 +11,13 @@ push "dhcp-option DNS {{ns}}"
 {%endfor %}
 {% endif %}
 
+{% if openvpn_server.subnets is defined %}
+{% for subnet in openvpn_server.subnets %}
+push "route {{subnet.network}} {{subnet.netmask}} {{subnet.gateway}}"
+{%endfor %}
+{% endif %}
+
+
 {% if openvpn_server.mode == 'routing' %}
 dev tun
 server {{openvpn_server.link.network}}  {{ openvpn_server.link.netmask }}

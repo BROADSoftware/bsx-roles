@@ -54,6 +54,14 @@ Ping(DROP)	net		$FW
 # ---------------- Allow ping and other icmp from Firewall
 ACCEPT		$FW		loc		icmp
 ACCEPT		$FW		net		icmp
+
+{% if shorewall.if_dmz_name is defined %}
+# ---------------Allow Ping from the dmz
+Ping(ACCEPT)	dmz		$FW
+# ---------------- Allow ping and other icmp from Firewall
+ACCEPT		$FW		dmz		icmp
+{% endif %}
+
 #
 {% if shorewall.rules is defined %}
 {% for rule in shorewall.rules %}

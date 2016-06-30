@@ -17,6 +17,10 @@ loc         net	        ACCEPT
 net         all	        DROP        info
 $FW         net         ACCEPT
 $FW         loc         ACCEPT
+{% if shorewall.if_dmz_name is defined %}
+dmz         all	        DROP        info
+$FW         dmz         ACCEPT
+{% endif %}
 # THE FOLLOWING POLICY MUST BE LAST
 all         all	        REJECT      info
 

@@ -16,3 +16,6 @@
 #ZONE	INTERFACE	OPTIONS
 net     {{shorewall.if_net_name}}        {{shorewall.if_net_options}}
 loc     {{shorewall.if_loc_name}}        {{shorewall.if_loc_options}}
+{% if shorewall.if_dmz_name is defined %}
+dmz     {{shorewall.if_dmz_name}}        {{shorewall.if_dmz_options}}
+{% endif %}

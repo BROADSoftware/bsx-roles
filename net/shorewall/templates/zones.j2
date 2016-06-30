@@ -16,3 +16,6 @@
 fw	firewall
 net	ipv4
 loc	ipv4
+{% if shorewall.if_dmz_name is defined %}
+dmz	ipv4
+{% endif %}
