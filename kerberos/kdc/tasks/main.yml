@@ -1,0 +1,95 @@
+---
+# Copyright (C) 2016 BROADSoftware
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#limitations under the License.
+#
+
+
+# https://gist.github.com/ashrithr/4767927948eca70845db
+# http://web.mit.edu/kerberos/krb5-1.13/doc/index.html
+# http://www.linuxjournal.com/article/7336?page=0,3
+
+- name: Install kdc server
+  yum: pkg=krb5-server,krb5-libs state=present
+
+# This to allow kdb5_util create... to execute in acceptable time (In case of lxc, must be performed in the host)
+- name: Install haveged for entropy 
+  yum: pkg=haveged state=present
+  when: ansible_virtualization_type != "lxc"
+- name: And launch haveged
+  service: name=haveged state=started enabled=yes  
+  when: ansible_virtualization_type != "lxc"
+  
+- name: Configure krb5.conf
+  template: src=krb5.conf.j2 dest=/etc/krb5.conf owner=root group=root mode=0644
+  notify:
+  - restart krb5kdc
+  - restart kadmin
+
+- name: Configure kdc.conf
+  template: src=kdc.conf.j2 dest=/var/kerberos/krb5kdc/kdc.conf owner=root group=root mode=0600
+  notify:
+  - restart krb5kdc
+  - restart kadmin
+
+- name: Configure kadm5.acl
+  template: src=kadm5.acl.j2 dest=/var/kerberos/krb5kdc/kadm5.acl owner=root group=root mode=0600
+  notify:
+  - restart krb5kdc
+  - restart kadmin
+
+# Note the default("") will allow this task to run without error in case the database is already created.
+# If not, then an error will be generated if kdc_master_password is not defined
+- name: Create KDC database
+  shell: kdb5_util create -r {{ kdc_realm }} -s -P {{ kdc_master_password|default("") }}
+  args: 
+    creates: /var/kerberos/krb5kdc/principal
+
+# Note we set principal to unexisting otherwise, it will use the USER (root), append '/admin' and display 'Authenticating as principal root/admin@SEC1 with password.'
+# This will mislead the stdout.find("root/admin") below
+- name: Fetch existing principals
+  shell: kadmin.local -p unexisting -q "listprincs"
+  register: listprincs
+  changed_when: false
+  
+- name: Create kadmin principal
+  shell: kadmin.local -q "addprinc -pw {{kdc_admin_password|default('')}}  {{kdc_admin_user}}/admin"
+  when: listprincs.stdout.find("{{kdc_admin_user}}/admin") == -1
+
+- name: Create admin keytab
+  shell: kadmin.local -q "ktadd -k /var/kerberos/krb5kdc/kadm5.keytab kadmin/admin kadmin/changepw"
+  args:
+    creates: /var/kerberos/krb5kdc/kadm5.keytab
+
+- name: Create kdc server principal
+  shell: kadmin.local -q "addprinc -randkey host/{{kdc_server}}"; kadmin.local -q "ktadd host/{{kdc_server}}"
+  when: listprincs.stdout.find("host/{{kdc_server}}") == -1
+
+
+
+
+# ------------------------------------ Service activate and start   
+- meta: flush_handlers
+    
+- name: Start krb5kdc
+  service: 
+    name: krb5kdc
+    state: started
+    enabled: yes
+        
+- name: Start kadmin
+  service: 
+    name: kadmin
+    state: started
+    enabled: yes
+    

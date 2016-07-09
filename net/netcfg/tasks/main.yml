@@ -14,8 +14,10 @@
 #limitations under the License.
 #
 
-#- name: Disable NetworkManager
-#  service: name=NetworkManager state=stopped enabled=no
+# Effective only on first run. Will fail later on, as service is removed by below task
+- name: Disable NetworkManager
+  service: name=NetworkManager state=stopped enabled=no
+  failed_when: false
 
 - name: Remove NetworkManager
   yum: name=NetworkManager state=absent

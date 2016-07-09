@@ -128,3 +128,10 @@ zookeeper.connect={% for host in groups['zookeepers'] %}{% if not loop.first %},
 
 # Timeout in ms for connecting to zookeeper
 zookeeper.connection.timeout.ms=6000
+
+
+# Rack awarness, if any (Kafka >= 0.10.0.0
+{% if kafka_rack is defined %}
+broker.rack={{kafka_rack}}
+{% endif %}
+
