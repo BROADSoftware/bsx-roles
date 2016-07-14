@@ -28,7 +28,10 @@
 
 # Mainly to set zookeeper variable, if a group 'zookeepers' exists in inventory
 - name: Configure jdchtable    
-  template: src=setenv.sh.j2 dest=/etc/jdchtable/setenv.sh owner=root group=root mode=0644
+  template: src={{item}}.j2 dest=/etc/jdchtable/{{item}} owner=root group=root mode=0644
+  with_items:
+  - setenv.sh
+  - log4j.xml
 
 - name: Create a temporary file
   shell: mktemp
@@ -40,7 +43,7 @@
   changed_when: false
 
 - name: Apply potential update
-  shell: jdchtable --inputFile {{mktemp.stdout}}
+  shell: jdchtable --inputFile {{mktemp.stdout}} --defaultState {{jdchtable_defaultState|default('present')}}
   register: jdch
   changed_when: jdch.stdout.find("0 modification(s)") == -1
 
