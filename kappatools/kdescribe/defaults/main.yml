@@ -15,8 +15,5 @@
 #
 
 
-#jdchtable_rpm_url: https://github.com/BROADSoftware/jdchtable/releases/download/v0.1.1/jdchtable_cdh552-0.1.1-1.noarch.rpm
-#jdchtable_rpm_url: https://github.com/BROADSoftware/jdchtable/releases/download/v0.1.1/jdchtable_hdp24-0.1.1-1.noarch.rpm
+#kdescribe_rpm_url: https://github.com/BROADSoftware/jdchtable/releases/download/v0.1.0/kdescribe-0.1.0-1.noarch.rpm
 
-#jdchtable_znodeParent: "/hbase"
-#jdchtable_znodeParent: "/hbase-unsecure"

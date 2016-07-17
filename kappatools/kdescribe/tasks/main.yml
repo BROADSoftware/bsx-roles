@@ -15,8 +15,23 @@
 #
 
 
-#jdchtable_rpm_url: https://github.com/BROADSoftware/jdchtable/releases/download/v0.1.1/jdchtable_cdh552-0.1.1-1.noarch.rpm
-#jdchtable_rpm_url: https://github.com/BROADSoftware/jdchtable/releases/download/v0.1.1/jdchtable_hdp24-0.1.1-1.noarch.rpm
 
-#jdchtable_znodeParent: "/hbase"
-#jdchtable_znodeParent: "/hbase-unsecure"
+# Use stat for reducing execution time in case of already installed.
+- stat: path=/bin/kdescribe
+  register: kdescribe
+
+- name: Install kdescribe 
+  yum:
+    name: "{{ kdescribe_rpm_url }}"
+    state: present
+  when: not kdescribe.stat.exists
+
+  
+
+# Mainly to set zookeeper variable, if a group 'zookeepers' exists in inventory
+- name: Configure kdescribe    
+  template: src={{item}}.j2 dest=/etc/kdescribe/{{item}} owner=root group=root mode=0644
+  with_items:
+  - setenv.sh
+  - log4j.xml
+  
