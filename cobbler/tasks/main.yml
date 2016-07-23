@@ -44,17 +44,19 @@
   - /var/lib/cobbler/snippets/per_system/host_key_pub
   - /var/lib/cobbler/snippets/per_system/host_key_priv
 
+
+- meta: flush_handlers
+
 - service: name=httpd enabled=yes state=started
+- service: name=cobblerd enabled=yes state=started       
+- service: name=xinetd enabled=yes state=started
+
 
 - name: Populate cobbler's loaders
   shell: cobbler get-loaders  
   args:
     creates: /var/lib/cobbler/loaders/pxelinux.0
-  
-- meta: flush_handlers
 
-- service: name=cobblerd enabled=yes state=started       
-- service: name=xinetd enabled=yes state=started
   
 - name: Check distro
   shell: cobbler distro list 
@@ -75,10 +77,14 @@
   shell: cobbler repo add --name={{item.name}} --mirror={{item.mirror}} --keep-updated=Y --arch=x86_64 --mirror-locally=Y
   when: repositories.stdout.find(item.name) == -1
   with_items: cobbler.repositories
-  
-  
+
 - name: Setup a cron for repository update
   cron: name="Reposync" job="cobbler reposync" minute="0" hour="3" state=present  
+    
+- name: Launch initial reposync (May take a long time)
+  shell: cobler reposync
+  args:
+    create: /var/www/cobbler/repo_mirror/centos7epel 
   
   
   

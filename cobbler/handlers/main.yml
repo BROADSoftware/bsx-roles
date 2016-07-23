@@ -5,8 +5,9 @@
 - name: Restart httpd
   service: name=httpd state=restarted
 
+# We need to be sure xinetd was restarted after a cobler sync
 - name: Cobbler sync
-  shell: cobbler sync
+  shell: cobbler sync; systemctl restart xinetd
 
 - name: Restart xinetd
   service: name=xinetd state=restarted
