@@ -53,7 +53,7 @@
   lineinfile: dest=/etc/hosts regexp='^{{lxc_guest.ip_address}}' line='{{lxc_guest.ip_address}} {{lxc_guest.name}}.{{lxc_guest_domain}} {{lxc_guest.name}}' owner=root group=root mode=0644  
 
 - name: Document local inventory
-  local_action: lineinfile dest='{{target_inventory_file}}' create=yes state=present regexp='^{{lxc_guest.name}} ansible_ssh_host' line='{{lxc_guest.name}} ansible_ssh_host={{lxc_guest.name}}.{{lxc_guest_domain}} ansible_ssh_user=root ansible_ssh_private_key_file=../.vagrant/machines/{{ ansible_hostname }}/virtualbox/private_key'  
+  local_action: lineinfile dest='{{target_inventory_file}}' create=yes state=present regexp='^{{lxc_guest.name}} ansible_ssh_host' line='{{lxc_guest.name}} ansible_ssh_host={{lxc_guest.name}}.{{lxc_guest_domain}} ansible_ssh_user=root ansible_ssh_private_key_file={{playbook_dir}}/.vagrant/machines/{{ ansible_hostname }}/virtualbox/private_key'  
   become: true
   become_user: "{{ local_user_account }}"
   

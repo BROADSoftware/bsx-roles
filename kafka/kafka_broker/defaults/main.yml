@@ -9,7 +9,7 @@ kafka_log_dirs:
   
 kafka_delete_topic_enable: "false"
 
-kafka_auto_create_topics_enable: "true"
+kafka_auto_create_topics_enable: "false"
 
 kafka_jmx_port: 9010
 
