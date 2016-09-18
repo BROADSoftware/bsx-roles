@@ -31,7 +31,7 @@
     
 # Handle 'other' mode
 
-- name: "Mode 'none': Remove repo files"
+- name: "Mode 'other': Remove repo files"
   file: path=/etc/yum.repos.d/{{item}} state=absent
   when: yum_repo_mode == 'other'
   with_items:
