@@ -1,0 +1,5 @@
+{
+	"insecure-registries": [{% for reg in docker_insecure_registries %}{% if not loop.first %},{% endif %}"{{  reg }}"{% endfor %}],
+	"storage-driver": "{{storage_driver}}",
+	"hosts": [ {% for l in docker_daemon_listeners %}{% if not loop.first %},{% endif %}"{{  l }}"{% endfor %}]
+}

@@ -13,19 +13,15 @@
 # See the License for the specific language governing permissions and
 #limitations under the License.
 #
-# Install docker 
 
 
-- include: docker_host_centos.yml
-  when: ansible_os_family == 'RedHat' and ansible_distribution == 'CentOS'
-        
-        
-- name: Add some user(s) to docker group
-  user:
-    name: "{{ item }}"
-    groups: docker
-    append: yes
-  with_items:  
-  - "{{ docker_users | default([]) }}"
- 
+    
+- name: reload service file
+  command: "systemctl daemon-reload"
+  
+
+- name: restart docker
+  service: 
+    name: docker
+    state: restarted
     

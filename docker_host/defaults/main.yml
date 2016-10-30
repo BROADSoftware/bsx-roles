@@ -15,6 +15,32 @@
 #
 
 
-# These values can be overriden to target a local repo
-yum_repo_docker_url: "https://yum.dockerproject.org/repo/main/centos/$releasever/"
-yum_repo_docker_key_url: "https://yum.dockerproject.org/gpg"
+# These values can be set to target a local repo
+# yum_repo_docker_url: "{{ repositories_url }}/vendors/7/dockerrepo/"
+# yum_repo_docker_key_url: "{{ repositories_url }}/vendors/7/dockerrepo/gpg"
+
+# or usual public docker repo
+#yum_repo_docker_url: "https://yum.dockerproject.org/repo/main/centos/$releasever/"
+#yum_repo_docker_key_url: "https://yum.dockerproject.org/gpg"
+
+docker_daemon_listeners: [ "unix:///var/run/docker.sock" ]
+docker_insecure_registries: []
+storage_driver: ""
+
+# To build/update a local repo:
+
+# cat >/etc/yum.repos.d/docker.repo
+# [dockerrepo]
+# name=Docker Repository
+# baseurl=https://yum.dockerproject.org/repo/main/centos/$releasever/
+# enabled=1
+# gpgcheck=1
+# gpgkey=https://yum.dockerproject.org/gpg
+#
+# yum install yum-utils,createrepo
+# cd /.../repository/vendors/7/
+# reposync --repoid=dockerrepo
+# createrepo dockerrepo/
+# cd dockerrepo
+# wget https://yum.dockerproject.org/gpg
+    
