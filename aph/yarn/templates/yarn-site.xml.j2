@@ -26,6 +26,17 @@
     <value>org.apache.hadoop.mapred.ShuffleHandler</value>
   </property>
 
+   <property>
+    <name>yarn.log-aggregation-enable</name>
+    <value>true</value> 
+  </property>  
+
+  <!-- 604800: One week -->
+   <property>
+    <name>yarn.log-aggregation.retain-seconds</name>
+    <value>604800</value> 
+  </property>  
+
 
   <!-- If we want to aggregate logs from datanodes to hdfs
   Would need to create appropriate folder in HDFS

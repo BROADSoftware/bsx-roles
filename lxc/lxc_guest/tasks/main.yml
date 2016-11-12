@@ -109,13 +109,11 @@
 
 - name: "{{lxc_guest.name}}: Create mount point on host"
   file: path={{item.host_path}} state=directory  owner={{item.host_path_owner|default("root")}} group={{item.host_path_group|default("root")}} mode={{item.host_path_mode|default(0755)}}
-  with_items: lxc_guest.volumes|default([])
-  #when: lxc_guest.volumes is defined
+  with_items: "{{lxc_guest.volumes|default([])}}"
   
 - name: "{{lxc_guest.name}}: Create mount point on guest"
   file: path=/var/lib/lxc/{{lxc_guest.name}}/rootfs/{{item.guest_path}} state=directory  owner={{item.guest_path_owner|default("root")}} group={{item.guest_path_group|default("root")}} mode={{item.guest_path_mode|default(0755)}}
-  with_items: lxc_guest.volumes|default([])
-  #when: lxc_guest.volumes is defined
+  with_items: "{{lxc_guest.volumes|default([])}}"
 
   
 - name: "{{lxc_guest.name}}: Add 'lxc.mount = fstab' in container config file"

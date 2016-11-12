@@ -26,17 +26,17 @@
 
 - name: "Create Namenode data folder"
   file: path={{item}} state=directory  owner=hdfs group=hadoop mode=0755
-  with_items: hdfs_pnn_data_folder
+  with_items: "{{hdfs_pnn_data_folder}}"
   when: ansible_nodename in groups['hdfs_pnn']
 
 - name: "Create Secondary Namenode data folder"
   file: path={{item}} state=directory  owner=hdfs group=hadoop mode=0755
-  with_items: hdfs_snn_data_folder
+  with_items: "{{hdfs_snn_data_folder}}"
   when: ansible_nodename in groups['hdfs_snn']
 
 - name: "Create Datanode data folder"
   file: path={{item}} state=directory  owner=hdfs group=hadoop mode=0755
-  with_items: hdfs_dn_data_folder
+  with_items: "{{hdfs_dn_data_folder}}"
   when: ansible_nodename in groups['hdfs_dn']
 
 
