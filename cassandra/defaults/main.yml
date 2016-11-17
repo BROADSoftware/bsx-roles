@@ -15,9 +15,10 @@
 #
 
 # Must be defined par installation
-# cassandra_version: 3.5
 # cassandra_cluster_name: "Default"
 
+# Adjust to latest
+cassandra_version: 3.9
 
 # This value can be overriden to target a local repo
 yum_repo_cassandra_url: "http://rpm.datastax.com/datastax-ddc/{{cassandra_version}}"

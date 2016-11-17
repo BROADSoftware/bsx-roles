@@ -16,5 +16,5 @@
 # Install mesos 
 
 - include: cassandra_centos.yml
-  when: ansible_os_family == 'RedHat' and ansible_distribution == 'CentOS'
+  when: ansible_os_family == 'RedHat'
     

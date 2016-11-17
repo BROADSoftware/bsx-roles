@@ -29,8 +29,8 @@
   yum: pkg=datastax-ddc state=present    
   notify: 
   - reload service file
- 
- 
+
+
 - name: Create cassandra data folders
   file: path={{ item }} state=directory owner=cassandra group=cassandra mode=0755
   with_items: "{{ cassandra_data_file_directories }}"
@@ -41,7 +41,7 @@
   
 - name: Setup cassandra config
   template:
-    src: "{{ item }}.j2"
+    src: "{{ item }}.{{cassandra_version}}.j2"
     dest: "/etc/cassandra/conf/{{ item }}"
     owner: cassandra
     group: cassandra
@@ -58,7 +58,7 @@
 # https://issues.apache.org/jira/browse/CASSANDRA-11573
 - name: 3.5 cqlsh bug fix
   file: path=/usr/lib/python2.7/site-packages/cqlshlib/copyutil.so state=absent
-  when: cassandra_version == 3.5
+  when: cassandra_version is defined and cassandra_version == 3.5
  
 
 # ------------------------------------ Service activate and start   
