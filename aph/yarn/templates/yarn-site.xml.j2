@@ -26,10 +26,21 @@
     <value>org.apache.hadoop.mapred.ShuffleHandler</value>
   </property>
 
+
+  <!-- If we want to aggregate logs from datanodes to hdfs
+  Would need to create appropriate folder in HDFS
+  WARNING yarn.log.aggregation-enable for cloudera (dot instead of dash) ?
+  <property>
+    <description>Where to aggregate logs</description>
+    <name>yarn.nodemanager.remote-app-log-dir</name>
+    <value>hdfs://<namenode-host.company.com>:8020/var/log/hadoop-yarn/apps</value>
+  </property>
+  -->
    <property>
     <name>yarn.log-aggregation-enable</name>
     <value>true</value> 
   </property>  
+
 
   <!-- 604800: One week -->
    <property>
@@ -37,20 +48,10 @@
     <value>604800</value> 
   </property>  
 
-
-  <!-- If we want to aggregate logs from datanodes to hdfs
-  Would need to create appropriate folder in HDFS
-  WARNING yarn.log.aggregation-enable for cloudera (dot instead of dash) ?
    <property>
-    <name>yarn.log-aggregation-enable</name>
-    <value>true</value> 
+    <name>yarn.nodemanager.delete.debug-delay-sec</name>
+    <value>{{yarn_nodemanager_delete_debug_delay_sec}}</value> 
   </property>  
-  <property>
-    <description>Where to aggregate logs</description>
-    <name>yarn.nodemanager.remote-app-log-dir</name>
-    <value>hdfs://<namenode-host.company.com>:8020/var/log/hadoop-yarn/apps</value>
-  </property>
-  -->
   
   
 </configuration>

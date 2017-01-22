@@ -25,7 +25,7 @@
 - name: Check if MASQUERADE already set
   shell: iptables -t nat -L -v
   register: iptables_nat_rules
-  always_run: yes
+  check_mode: no
   changed_when: false
 
 - name: Apply MASQUERADE

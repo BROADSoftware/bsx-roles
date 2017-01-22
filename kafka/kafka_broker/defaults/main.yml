@@ -3,14 +3,38 @@ kafka_heap_opts: "-Xmx1G -Xms1G"
  
 # WARNING: This is kafka main log file. Nothing to do with INFO/DEBUG... log4j output
 # Think about dedicated disk in production environnement
-kafka_log_dirs: 
+kafka_logs_dirs: 
   - "/var/lib/kafka"
 
   
-kafka_delete_topic_enable: "false"
+kafka_delete_topic_enable: "true"
 
 kafka_auto_create_topics_enable: "false"
 
 kafka_jmx_port: 9010
+
+
+# ---------------------- Default topic configuration
+
+# Specify the final compression type for a given topic. This configuration accepts the standard compression codecs ('gzip', 'snappy', 'lz4'). 
+# It additionally accepts 'uncompressed' which is equivalent to no compression; and 'producer' which means retain the original compression codec set by the producer.#
+kafka_compression_type: producer
+# The minimum age of a log file to be eligible for deletion
+kafka_log_retention_hours: 168
+# A size-based retention policy for logs. Segments are pruned from the log as long as the remaining
+# segments don't drop below log.retention.bytes.
+kafka_log_retention_bytes: 1073741824
+# By default the log cleaner is disabled and the log retention policy will default to just delete segments after their retention expires.
+# If log.cleaner.enable=true is set the cleaner will be enabled and individual logs can then be marked for log compaction.
+# Should be enabled if using any topics with a cleanup.policy=compact including the internal offsets topic
+kafka_log_cleaner_enable: "false"
+
+# The default number of log partitions per topic. More partitions allow greater
+# parallelism for consumption, but this will also result in more files across
+# the brokers.
+kafka_num_partitions: 1
+
+# default replication factors for automatically created topics
+kafka_default_replication_factor: 1
 
 

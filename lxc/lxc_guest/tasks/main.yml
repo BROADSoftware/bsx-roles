@@ -60,7 +60,7 @@
 - name: Get DNS from host
   shell: 'cat /etc/resolv.conf | grep -Eo "nameserver[ \t]*([0-9]*\.){3}[0-9]" | grep -Eo "([0-9]*\.){3}[0-9]"'
   register: lxc_dns_ip_address     
-  always_run: yes
+  check_mode: no
   changed_when: false
 
 - name: "{{lxc_guest.name}}: Configure container network interface"
