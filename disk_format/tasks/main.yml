@@ -21,7 +21,7 @@
   args:
     creates: '{{ item.disk }}1'
     executable: '/bin/bash'
-  with_items: disk_additional_disks
+  with_items: "{{disk_additional_disks|default([])}}"
   when: disk_additional_disks is defined  
   tags:
     - disk
@@ -32,7 +32,7 @@
     force: '{{ item.force|d(omit) }}'
     fstype: '{{ item.fstype }}'
     opts: '{{ item.fsopts|d(omit) }}'
-  with_items: disk_additional_disks
+  with_items: "{{disk_additional_disks|default([])}}"
   when: disk_additional_disks is defined  
   tags:
     - disk
@@ -43,7 +43,7 @@
     owner={{ disk_user | default('root') }}
     group={{ disk_group | default('root') }}
     state=directory
-  with_items: disk_additional_disks
+  with_items: "{{disk_additional_disks|default([])}}"
   when: disk_additional_disks is defined  
   tags:
     - disk
@@ -51,7 +51,7 @@
 - name: Get UUID for partition
   command: blkid -s UUID -o value "{{ item.disk }}1"
   register: disk_blkid
-  with_items: disk_additional_disks
+  with_items: "{{disk_additional_disks|default([])}}"
   when: disk_additional_disks is defined  
   changed_when: False
   tags:
@@ -67,7 +67,7 @@
     state: '{{ item.0.mount_state|d("mounted") }}'
   when: disk_additional_disks is defined  
   with_together:
-    - '{{ disk_additional_disks | default([]) }}'
+    - '{{ disk_additional_disks|default([]) }}'
     - '{{ disk_blkid.results }}'
   tags:
     - disk

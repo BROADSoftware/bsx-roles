@@ -15,6 +15,6 @@
 #
 
 
-jce_archive: jce_policy-8.zip
+# jce_archive: jce_policy-8.zip
 
-#jce_url:  "http://{{repositories_server}}/repo/misc/{{jce_archive}}"
+# jce_url:  "http://{{repositories_server}}/repo/misc/{{jce_archive}}"

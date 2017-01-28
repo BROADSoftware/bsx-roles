@@ -49,18 +49,18 @@
 
 - name: Create data folders
   file: path=/vol{{item}}/libvirt/images owner=root group=kvm state=directory mode=0775
-  with_items: kvm_volumes_tag_list
+  with_items: "{{kvm_volumes_tag_list}}"
 
 - name: create pool
   shell: virsh pool-define-as images{{item}} dir --target /vol{{item}}/libvirt/images
   args:
     creates: /etc/libvirt/storage/images{{item}}.xml
-  with_items: kvm_volumes_tag_list
+  with_items: "{{kvm_volumes_tag_list}}"
     
 - name: start pool
   shell: virsh pool-start images{{item}};  virsh  pool-autostart images{{item}}
   args:
     creates: /etc/libvirt/storage/autostart/images{{item}}.xml
-  with_items: kvm_volumes_tag_list
+  with_items: "{{kvm_volumes_tag_list}}"
    
     

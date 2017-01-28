@@ -18,7 +18,7 @@
 - name: locate JAVA_HOME
   shell: 'echo /usr/java/jdk1.*'
   register: java_home
-  always_run: yes
+  check_mode: no
   changed_when: false
 
 - name: Download jce in JAVA_HOME
