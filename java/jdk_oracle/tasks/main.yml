@@ -26,3 +26,31 @@
     name: "{{ jdk_rpm_url }}"
     state: present
   when: not javac.stat.exists
+
+  
+- name: locate JAVA_HOME
+  shell: 'echo /usr/java/jdk1.*'
+  register: java_home
+  check_mode: no
+  changed_when: false
+ 
+- name: Check java_home (1/2)
+  stat: path={{ java_home.stdout }}/bin/javac
+  register: javac
+
+- name: Check java_home (2/2)
+  fail: msg='Unable to lookup up java_home'
+  when: not javac.stat.exists
+  
+
+- name: Set JAVA_HOME in bashrc
+  blockinfile:
+    dest: /etc/bashrc
+    backup: no
+    insertafter: EOF
+    marker: "# {mark} Ansible managed block (JAVA_HOME)"
+    content: |
+      export JAVA_HOME={{ java_home.stdout }}
+  when: set_java_home is defined and set_java_home
+
+  

@@ -10,8 +10,9 @@
 	renew_lifetime = 7d
 	forwardable = true
 	rdns = false
-	default_ccache_name = KEYRING:persistent:%{uid}
-
+	#default_ccache_name = KEYRING:persistent:%{uid}
+	default_ccache_name = /tmp/krb5cc_%{uid}
+	
 [realms]
 	{{ kdc_realm }} = {
 		kdc = {{ kdc_server }}
