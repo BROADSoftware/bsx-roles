@@ -24,6 +24,7 @@
   yum:
     name: "{{ jdctopic_rpm_url }}"
     state: present
+    validate_certs: no
   when: not jdctopic.stat.exists
 
 # Mainly to set zookeeper variable, if a group 'zookeepers' exists in inventory

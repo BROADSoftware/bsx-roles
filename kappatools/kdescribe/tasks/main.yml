@@ -24,6 +24,7 @@
   yum:
     name: "{{ kdescribe_rpm_url }}"
     state: present
+    validate_certs: no
   when: not kdescribe.stat.exists
 
   
@@ -34,4 +35,5 @@
   with_items:
   - setenv.sh
   - log4j.xml
+  - kafka_client_jaas.conf
   
