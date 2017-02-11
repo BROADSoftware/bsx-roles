@@ -1,6 +1,7 @@
 ---
 
-gradle_version: "2.12"
+#gradle_version: "2.12"
+gradle_version: "3.3"
 
 gradle_zip_url: https://services.gradle.org/distributions/gradle-{{ gradle_version }}-bin.zip
 
